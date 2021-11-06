@@ -1,0 +1,11 @@
+C:\Users\toron\source\repos\NBT Tag Code Maker\bin\Debug\NBT Tag Code Maker.exe.config
+C:\Users\toron\source\repos\NBT Tag Code Maker\bin\Debug\NBT Tag Code Maker.exe
+C:\Users\toron\source\repos\NBT Tag Code Maker\bin\Debug\NBT Tag Code Maker.pdb
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT_Tag_Code_Maker.Form1.resources
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT_Tag_Code_Maker.Properties.Resources.resources
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.csproj.GenerateResource.cache
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.csproj.CoreCompileInputs.cache
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.csproj.CopyComplete
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.exe
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.pdb
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.csproj.AssemblyReference.cache

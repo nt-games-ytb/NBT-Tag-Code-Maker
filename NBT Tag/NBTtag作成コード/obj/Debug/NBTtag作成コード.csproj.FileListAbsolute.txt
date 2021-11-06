@@ -1,0 +1,8 @@
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\obj\Debug\NBTtag作成コード.csprojAssemblyReference.cache
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\obj\Debug\NBTtag作成コu30FCド.Form1.resources
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\obj\Debug\NBTtag作成コード.csproj.GenerateResource.cache
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\bin\Debug\NBT tag code maker.exe
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\bin\Debug\NBT tag code maker.pdb
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\obj\Debug\NBT tag code maker.exe
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\obj\Debug\NBT tag code maker.pdb
+G:\Jeux\Minecraft\BACKUP TORONK\Minecraft\Wii U\TOUT LES MODS MINECRAFT\MamiesMod\NBT Tag\NBTtag作成コード\obj\Debug\NBTtag作成コu30FCド.Properties.Resources.resources
