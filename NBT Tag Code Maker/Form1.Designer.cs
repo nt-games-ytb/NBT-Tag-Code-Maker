@@ -91,8 +91,16 @@
             this.delete = new System.Windows.Forms.Button();
             this.copy = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
-            this.channelLink = new System.Windows.Forms.LinkLabel();
+            this.ntgamesChannelLink = new System.Windows.Forms.LinkLabel();
             this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.daidoChannelLink = new System.Windows.Forms.LinkLabel();
+            this.codeBox = new System.Windows.Forms.GroupBox();
+            this.disconnect = new System.Windows.Forms.Button();
+            this.connect = new System.Windows.Forms.Button();
+            this.connectionBox = new System.Windows.Forms.GroupBox();
+            this.ipText = new System.Windows.Forms.TextBox();
+            this.activateTheCode = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.itemPlace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemDamage)).BeginInit();
@@ -109,6 +117,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.blue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.red)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.green)).BeginInit();
+            this.codeBox.SuspendLayout();
+            this.connectionBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // creativeTab
@@ -144,7 +154,7 @@
             this.label1.Location = new System.Drawing.Point(7, 18);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 16);
+            this.label1.Size = new System.Drawing.Size(85, 16);
             this.label1.TabIndex = 1;
             this.label1.Text = "Creative tab :";
             // 
@@ -154,7 +164,7 @@
             this.enchantment.Enabled = false;
             this.enchantment.Location = new System.Drawing.Point(10, 130);
             this.enchantment.Name = "enchantment";
-            this.enchantment.Size = new System.Drawing.Size(104, 20);
+            this.enchantment.Size = new System.Drawing.Size(103, 20);
             this.enchantment.TabIndex = 2;
             this.enchantment.Text = "Enchantment";
             this.enchantment.UseVisualStyleBackColor = true;
@@ -166,7 +176,7 @@
             this.attribute.Enabled = false;
             this.attribute.Location = new System.Drawing.Point(158, 130);
             this.attribute.Name = "attribute";
-            this.attribute.Size = new System.Drawing.Size(75, 20);
+            this.attribute.Size = new System.Drawing.Size(74, 20);
             this.attribute.TabIndex = 3;
             this.attribute.Text = "Attirbute";
             this.attribute.UseVisualStyleBackColor = true;
@@ -198,7 +208,7 @@
             this.label2.Location = new System.Drawing.Point(7, 48);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 16);
+            this.label2.Size = new System.Drawing.Size(75, 16);
             this.label2.TabIndex = 5;
             this.label2.Text = "Item place :";
             // 
@@ -209,7 +219,7 @@
             this.label3.Location = new System.Drawing.Point(7, 76);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 16);
+            this.label3.Size = new System.Drawing.Size(54, 16);
             this.label3.TabIndex = 7;
             this.label3.Text = "Item ID :";
             // 
@@ -234,7 +244,7 @@
             this.label4.Location = new System.Drawing.Point(7, 104);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(93, 16);
+            this.label4.Size = new System.Drawing.Size(92, 16);
             this.label4.TabIndex = 9;
             this.label4.Text = "Item damage :";
             // 
@@ -258,7 +268,7 @@
             this.unbreakable.Enabled = false;
             this.unbreakable.Location = new System.Drawing.Point(182, 104);
             this.unbreakable.Name = "unbreakable";
-            this.unbreakable.Size = new System.Drawing.Size(106, 20);
+            this.unbreakable.Size = new System.Drawing.Size(105, 20);
             this.unbreakable.TabIndex = 10;
             this.unbreakable.Text = "Unbreakable";
             this.unbreakable.UseVisualStyleBackColor = true;
@@ -271,7 +281,7 @@
             this.label5.Location = new System.Drawing.Point(155, 50);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(87, 16);
+            this.label5.Size = new System.Drawing.Size(86, 16);
             this.label5.TabIndex = 12;
             this.label5.Text = "Item number :";
             // 
@@ -325,7 +335,7 @@
             this.label10.Location = new System.Drawing.Point(7, 76);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(64, 16);
+            this.label10.Size = new System.Drawing.Size(63, 16);
             this.label10.TabIndex = 11;
             this.label10.Text = "Duration :";
             // 
@@ -348,7 +358,7 @@
             this.label7.Location = new System.Drawing.Point(7, 48);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(47, 16);
+            this.label7.Size = new System.Drawing.Size(46, 16);
             this.label7.TabIndex = 9;
             this.label7.Text = "Level :";
             // 
@@ -420,7 +430,7 @@
             this.label6.Location = new System.Drawing.Point(7, 18);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(87, 16);
+            this.label6.Size = new System.Drawing.Size(86, 16);
             this.label6.TabIndex = 3;
             this.label6.Text = "Potion effect :";
             // 
@@ -519,7 +529,7 @@
             this.label8.Location = new System.Drawing.Point(7, 48);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(47, 16);
+            this.label8.Size = new System.Drawing.Size(46, 16);
             this.label8.TabIndex = 9;
             this.label8.Text = "Level :";
             // 
@@ -586,7 +596,7 @@
             this.label9.Location = new System.Drawing.Point(7, 18);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(91, 16);
+            this.label9.Size = new System.Drawing.Size(90, 16);
             this.label9.TabIndex = 3;
             this.label9.Text = "Enchantment :";
             // 
@@ -595,6 +605,7 @@
             this.enchantmentText.AutoCompleteCustomSource.AddRange(new string[] {
             "Protection",
             "Fire protection",
+            "Feather falling",
             "Blast protection",
             "Projectile protection",
             "Respiration",
@@ -631,6 +642,7 @@
             this.enchantmentText.Items.AddRange(new object[] {
             "Protection",
             "Fire protection",
+            "Feather falling",
             "Blast protection",
             "Projectile protection",
             "Respiration",
@@ -739,7 +751,7 @@
             this.label11.Location = new System.Drawing.Point(7, 48);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(47, 16);
+            this.label11.Size = new System.Drawing.Size(46, 16);
             this.label11.TabIndex = 9;
             this.label11.Text = "Level :";
             // 
@@ -807,7 +819,7 @@
             this.label12.Location = new System.Drawing.Point(7, 18);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(62, 16);
+            this.label12.Size = new System.Drawing.Size(61, 16);
             this.label12.TabIndex = 3;
             this.label12.Text = "Attribute :";
             // 
@@ -848,12 +860,13 @@
             // 
             // codeText
             // 
-            this.codeText.Location = new System.Drawing.Point(30, 280);
+            this.codeText.Location = new System.Drawing.Point(6, 21);
             this.codeText.Multiline = true;
             this.codeText.Name = "codeText";
             this.codeText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.codeText.Size = new System.Drawing.Size(300, 102);
+            this.codeText.Size = new System.Drawing.Size(288, 111);
             this.codeText.TabIndex = 18;
+            this.codeText.TextChanged += new System.EventHandler(this.codeText_TextChanged);
             // 
             // colorBox
             // 
@@ -882,7 +895,7 @@
             this.label16.Location = new System.Drawing.Point(7, 104);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(87, 16);
+            this.label16.Size = new System.Drawing.Size(86, 16);
             this.label16.TabIndex = 16;
             this.label16.Text = "HTML value :";
             // 
@@ -902,7 +915,7 @@
             this.label15.Location = new System.Drawing.Point(7, 74);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(41, 16);
+            this.label15.Size = new System.Drawing.Size(40, 16);
             this.label15.TabIndex = 14;
             this.label15.Text = "Blue :";
             // 
@@ -926,7 +939,7 @@
             this.label14.Location = new System.Drawing.Point(7, 18);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(40, 16);
+            this.label14.Size = new System.Drawing.Size(39, 16);
             this.label14.TabIndex = 12;
             this.label14.Text = "Red :";
             // 
@@ -957,7 +970,7 @@
             this.label13.Location = new System.Drawing.Point(7, 46);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(51, 16);
+            this.label13.Size = new System.Drawing.Size(50, 16);
             this.label13.TabIndex = 9;
             this.label13.Text = "Green :";
             // 
@@ -978,32 +991,31 @@
             // 
             this.make.Enabled = false;
             this.make.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.make.Location = new System.Drawing.Point(30, 388);
+            this.make.Location = new System.Drawing.Point(6, 138);
             this.make.Name = "make";
-            this.make.Size = new System.Drawing.Size(300, 30);
+            this.make.Size = new System.Drawing.Size(288, 30);
             this.make.TabIndex = 20;
-            this.make.Text = "Make";
+            this.make.Text = "Make the code";
             this.make.UseVisualStyleBackColor = true;
             this.make.Click += new System.EventHandler(this.make_Click);
             // 
             // makeAndAdd
             // 
-            this.makeAndAdd.Enabled = false;
             this.makeAndAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.makeAndAdd.Location = new System.Drawing.Point(30, 424);
+            this.makeAndAdd.Location = new System.Drawing.Point(6, 174);
             this.makeAndAdd.Name = "makeAndAdd";
-            this.makeAndAdd.Size = new System.Drawing.Size(300, 30);
+            this.makeAndAdd.Size = new System.Drawing.Size(288, 30);
             this.makeAndAdd.TabIndex = 21;
-            this.makeAndAdd.Text = "Make and add";
+            this.makeAndAdd.Text = "Make the code and add the old code";
             this.makeAndAdd.UseVisualStyleBackColor = true;
             this.makeAndAdd.Click += new System.EventHandler(this.makeAndAdd_Click);
             // 
             // delete
             // 
             this.delete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.delete.Location = new System.Drawing.Point(30, 496);
+            this.delete.Location = new System.Drawing.Point(154, 210);
             this.delete.Name = "delete";
-            this.delete.Size = new System.Drawing.Size(300, 30);
+            this.delete.Size = new System.Drawing.Size(140, 30);
             this.delete.TabIndex = 23;
             this.delete.Text = "Delete";
             this.delete.UseVisualStyleBackColor = true;
@@ -1012,9 +1024,9 @@
             // copy
             // 
             this.copy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.copy.Location = new System.Drawing.Point(30, 460);
+            this.copy.Location = new System.Drawing.Point(6, 210);
             this.copy.Name = "copy";
-            this.copy.Size = new System.Drawing.Size(300, 30);
+            this.copy.Size = new System.Drawing.Size(140, 30);
             this.copy.TabIndex = 22;
             this.copy.Text = "Copy";
             this.copy.UseVisualStyleBackColor = true;
@@ -1023,47 +1035,142 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(30, 529);
+            this.label17.Location = new System.Drawing.Point(27, 595);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(169, 16);
+            this.label17.Size = new System.Drawing.Size(168, 16);
             this.label17.TabIndex = 24;
             this.label17.Text = "This software was make by";
             // 
-            // channelLink
+            // ntgamesChannelLink
             // 
-            this.channelLink.AutoSize = true;
-            this.channelLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.channelLink.Location = new System.Drawing.Point(194, 529);
-            this.channelLink.Name = "channelLink";
-            this.channelLink.Size = new System.Drawing.Size(63, 16);
-            this.channelLink.TabIndex = 25;
-            this.channelLink.TabStop = true;
-            this.channelLink.Text = "nt games";
-            this.channelLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.channelLink_LinkClicked);
+            this.ntgamesChannelLink.AutoSize = true;
+            this.ntgamesChannelLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.ntgamesChannelLink.Location = new System.Drawing.Point(191, 595);
+            this.ntgamesChannelLink.Name = "ntgamesChannelLink";
+            this.ntgamesChannelLink.Size = new System.Drawing.Size(62, 16);
+            this.ntgamesChannelLink.TabIndex = 25;
+            this.ntgamesChannelLink.TabStop = true;
+            this.ntgamesChannelLink.Text = "nt games";
+            this.ntgamesChannelLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ntgamesChannelLink_LinkClicked);
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(727, 529);
+            this.label18.Location = new System.Drawing.Point(728, 595);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(74, 16);
+            this.label18.Size = new System.Drawing.Size(73, 16);
             this.label18.TabIndex = 26;
-            this.label18.Text = "Version 2.0";
+            this.label18.Text = "Version 2.1";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(249, 595);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(175, 16);
+            this.label19.TabIndex = 27;
+            this.label19.Text = "with the first version make by";
+            // 
+            // daidoChannelLink
+            // 
+            this.daidoChannelLink.AutoSize = true;
+            this.daidoChannelLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.daidoChannelLink.Location = new System.Drawing.Point(420, 595);
+            this.daidoChannelLink.Name = "daidoChannelLink";
+            this.daidoChannelLink.Size = new System.Drawing.Size(56, 16);
+            this.daidoChannelLink.TabIndex = 28;
+            this.daidoChannelLink.TabStop = true;
+            this.daidoChannelLink.Text = "DAIDO0";
+            this.daidoChannelLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.daidoChannelLink_LinkClicked);
+            // 
+            // codeBox
+            // 
+            this.codeBox.Controls.Add(this.copy);
+            this.codeBox.Controls.Add(this.make);
+            this.codeBox.Controls.Add(this.codeText);
+            this.codeBox.Controls.Add(this.makeAndAdd);
+            this.codeBox.Controls.Add(this.delete);
+            this.codeBox.ForeColor = System.Drawing.Color.White;
+            this.codeBox.Location = new System.Drawing.Point(30, 280);
+            this.codeBox.Name = "codeBox";
+            this.codeBox.Size = new System.Drawing.Size(300, 246);
+            this.codeBox.TabIndex = 29;
+            this.codeBox.TabStop = false;
+            this.codeBox.Text = "Code";
+            // 
+            // disconnect
+            // 
+            this.disconnect.Enabled = false;
+            this.disconnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.disconnect.Location = new System.Drawing.Point(358, 21);
+            this.disconnect.Name = "disconnect";
+            this.disconnect.Size = new System.Drawing.Size(200, 30);
+            this.disconnect.TabIndex = 24;
+            this.disconnect.Text = "Disconnect";
+            this.disconnect.UseVisualStyleBackColor = true;
+            this.disconnect.Click += new System.EventHandler(this.disconnect_Click);
+            // 
+            // connect
+            // 
+            this.connect.Enabled = false;
+            this.connect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.connect.Location = new System.Drawing.Point(152, 21);
+            this.connect.Name = "connect";
+            this.connect.Size = new System.Drawing.Size(200, 30);
+            this.connect.TabIndex = 25;
+            this.connect.Text = "Connect";
+            this.connect.UseVisualStyleBackColor = true;
+            this.connect.Click += new System.EventHandler(this.connect_Click);
+            // 
+            // connectionBox
+            // 
+            this.connectionBox.Controls.Add(this.activateTheCode);
+            this.connectionBox.Controls.Add(this.ipText);
+            this.connectionBox.Controls.Add(this.disconnect);
+            this.connectionBox.Controls.Add(this.connect);
+            this.connectionBox.ForeColor = System.Drawing.Color.White;
+            this.connectionBox.Location = new System.Drawing.Point(30, 533);
+            this.connectionBox.Name = "connectionBox";
+            this.connectionBox.Size = new System.Drawing.Size(771, 59);
+            this.connectionBox.TabIndex = 30;
+            this.connectionBox.TabStop = false;
+            this.connectionBox.Text = "Connection";
+            // 
+            // ipText
+            // 
+            this.ipText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ipText.Location = new System.Drawing.Point(6, 22);
+            this.ipText.Name = "ipText";
+            this.ipText.Size = new System.Drawing.Size(140, 26);
+            this.ipText.TabIndex = 26;
+            this.ipText.Text = "192.168.";
+            this.ipText.TextChanged += new System.EventHandler(this.ipText_TextChanged);
+            // 
+            // activateTheCode
+            // 
+            this.activateTheCode.Enabled = false;
+            this.activateTheCode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.activateTheCode.Location = new System.Drawing.Point(566, 21);
+            this.activateTheCode.Name = "activateTheCode";
+            this.activateTheCode.Size = new System.Drawing.Size(200, 30);
+            this.activateTheCode.TabIndex = 27;
+            this.activateTheCode.Text = "Activate the code";
+            this.activateTheCode.UseVisualStyleBackColor = true;
+            this.activateTheCode.Click += new System.EventHandler(this.activateTheCode_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 550);
+            this.ClientSize = new System.Drawing.Size(825, 625);
+            this.Controls.Add(this.connectionBox);
+            this.Controls.Add(this.codeBox);
+            this.Controls.Add(this.daidoChannelLink);
+            this.Controls.Add(this.label19);
             this.Controls.Add(this.label18);
-            this.Controls.Add(this.channelLink);
+            this.Controls.Add(this.ntgamesChannelLink);
             this.Controls.Add(this.label17);
-            this.Controls.Add(this.delete);
-            this.Controls.Add(this.copy);
-            this.Controls.Add(this.makeAndAdd);
-            this.Controls.Add(this.make);
             this.Controls.Add(this.colorBox);
-            this.Controls.Add(this.codeText);
             this.Controls.Add(this.attributeBox);
             this.Controls.Add(this.optionBox);
             this.Controls.Add(this.enchantmentBox);
@@ -1101,6 +1208,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.blue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.red)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.green)).EndInit();
+            this.codeBox.ResumeLayout(false);
+            this.codeBox.PerformLayout();
+            this.connectionBox.ResumeLayout(false);
+            this.connectionBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1170,8 +1281,16 @@
         private System.Windows.Forms.Button info;
         private System.Windows.Forms.Button itemIdList;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.LinkLabel channelLink;
+        private System.Windows.Forms.LinkLabel ntgamesChannelLink;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.LinkLabel daidoChannelLink;
+        private System.Windows.Forms.GroupBox codeBox;
+        private System.Windows.Forms.Button disconnect;
+        private System.Windows.Forms.Button connect;
+        private System.Windows.Forms.GroupBox connectionBox;
+        private System.Windows.Forms.TextBox ipText;
+        private System.Windows.Forms.Button activateTheCode;
     }
 }
 

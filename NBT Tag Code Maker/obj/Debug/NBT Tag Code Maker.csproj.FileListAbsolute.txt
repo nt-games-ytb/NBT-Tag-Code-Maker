@@ -9,3 +9,4 @@ C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.cspr
 C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.exe
 C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.pdb
 C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.csproj.AssemblyReference.cache
+C:\Users\toron\source\repos\NBT Tag Code Maker\obj\Debug\NBT Tag Code Maker.csproj.SuggestedBindingRedirects.cache

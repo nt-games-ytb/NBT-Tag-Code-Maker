@@ -56,6 +56,7 @@ using MetroFramework.Components;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
 using NBT_Tag_Code_Maker.Properties;
+using MamiesModGecko;
 
 namespace NBT_Tag_Code_Maker
 {
@@ -68,8 +69,12 @@ namespace NBT_Tag_Code_Maker
 
         private DiscordRpc.EventHandlers handlers;
         private DiscordRpc.RichPresence presence;
-
+        private TCPConn Connection;
+        private TCPGecko MamiesModGecko;
+        private BeforeConnect BeforeConnect = new BeforeConnect();
+        public string nintendoNetwork;
         public string code;
+        public List<uint> codesList = new List<uint> { };
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -80,17 +85,18 @@ namespace NBT_Tag_Code_Maker
             #endregion
 
             #region Discord RPC
-            this.handlers = default(DiscordRpc.EventHandlers);
-            DiscordRpc.Initialize("853039518257119253", ref this.handlers, true, null);
-            this.presence.details = "Make a NBT tag code";
-            this.presence.largeImageKey = "nbt_tag_code_maker_1024";
-            this.presence.smallImageKey = "minecraft";
-            this.presence.largeImageText = "NBT Tag Code Maker";
-            this.presence.smallImageText = "Minecraft";
+            handlers = default(DiscordRpc.EventHandlers);
+            DiscordRpc.Initialize("853039518257119253", ref handlers, true, null);
+            presence.details = "Make a NBT tag code - Not connected";
+            presence.state = "";
+            presence.largeImageKey = "nbt_tag_code_maker_1024";
+            presence.smallImageKey = "minecraft";
+            presence.largeImageText = "NBT Tag Code Maker V2.1";
+            presence.smallImageText = "Minecraft";
             DateTime d = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             long startTimestamp = (long)(DateTime.UtcNow - d).TotalSeconds;
-            this.presence.startTimestamp = startTimestamp;
-            DiscordRpc.UpdatePresence(ref this.presence);
+            presence.startTimestamp = startTimestamp;
+            DiscordRpc.UpdatePresence(ref presence);
             #endregion
         }
 
@@ -188,13 +194,13 @@ namespace NBT_Tag_Code_Maker
             }
 
             presence.state = "Item: " + itemID.Value + ":" + itemDamage.Value;
-            DiscordRpc.UpdatePresence(ref this.presence);
+            DiscordRpc.UpdatePresence(ref presence);
         }
 
         private void itemDamage_ValueChanged(object sender, EventArgs e)
         {
             presence.state = "Item: " + itemID.Value + ":" + itemDamage.Value;
-            DiscordRpc.UpdatePresence(ref this.presence);
+            DiscordRpc.UpdatePresence(ref presence);
         }
 
         private void unbreakable_CheckedChanged(object sender, EventArgs e)
@@ -683,37 +689,41 @@ namespace NBT_Tag_Code_Maker
                         {
                             enchantmentString = "00000001";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Blast protection")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Feather falling")
                         {
                             enchantmentString = "00000002";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Projectile protection")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Blast protection")
                         {
                             enchantmentString = "00000003";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Respiration")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Projectile protection")
                         {
                             enchantmentString = "00000004";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Aqua affinity")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Respiration")
                         {
                             enchantmentString = "00000005";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Thorns")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Aqua affinity")
                         {
                             enchantmentString = "00000006";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Depth strider")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Thorns")
                         {
                             enchantmentString = "00000007";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Frost walker")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Depth strider")
                         {
                             enchantmentString = "00000008";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Binding curse")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Frost walker")
                         {
                             enchantmentString = "00000009";
+                        }
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Curse of binding")
+                        {
+                            enchantmentString = "0000000A";
                         }
                         #endregion
 
@@ -817,7 +827,7 @@ namespace NBT_Tag_Code_Maker
                         {
                             enchantmentString = "00000046";
                         }
-                        if (enchantmentList.Items[i].SubItems[0].Text == "Vanishing curse")
+                        if (enchantmentList.Items[i].SubItems[0].Text == "Curse of vanishing")
                         {
                             enchantmentString = "00000047";
                         }
@@ -1286,6 +1296,15 @@ namespace NBT_Tag_Code_Maker
             #endregion
         }
 
+        #region Code buttons
+        private void codeText_TextChanged(object sender, EventArgs e)
+        {
+            if (codeText.Text != "")
+            {
+                makeAndAdd.Enabled = true;
+            }
+        }
+
         private void make_Click(object sender, EventArgs e)
         {
             makeCode();
@@ -1307,10 +1326,108 @@ namespace NBT_Tag_Code_Maker
         {
             codeText.ResetText();
         }
+        #endregion
 
-        private void channelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        #region Connection
+        private void ipText_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (BeforeConnect.ValidateIPv4(ipText.Text) == true)
+                {
+                    connect.Enabled = true;
+                }
+                else
+                {
+                    connect.Enabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void connect_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                MamiesModGecko = new TCPGecko(ipText.Text);
+                MamiesModGecko.simplyConnect();
+                GetNintendoNetwork();
+                MessageBox.Show("Welcome " + nintendoNetwork.Replace("\0", "") + ",\n you are now connected on NBT Tag Code Maker !", "NBT Tag Code Maker");
+
+                ipText.Enabled = false;
+                connect.Enabled = false;
+                disconnect.Enabled = true;
+                activateTheCode.Enabled = true;
+
+                presence.details = "Make a NBT tag code - Connected on " + nintendoNetwork;
+                DiscordRpc.UpdatePresence(ref presence);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.Message, "NBT Tag Code Maker");
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show("Error: your ip is not the right one or you are not connected to the internet !", "NBT Tag Code Maker");
+            }
+            catch
+            {
+                MessageBox.Show("An unknown error has occurred !", "NBT Tag Code Maker");
+            }
+        }
+
+        private void disconnect_Click(object sender, EventArgs e)
+        {
+            MamiesModGecko.Disconnect();
+
+            ipText.Enabled = true;
+            connect.Enabled = true;
+            disconnect.Enabled = false;
+            activateTheCode.Enabled = false;
+
+            presence.state = "Make a NBT tag code - Disconnected";
+            DiscordRpc.UpdatePresence(ref presence);
+        }
+
+        private void GetNintendoNetwork()
+        {
+            string text1 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x4C));
+            string text2 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x50));
+            string text3 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x54));
+            string text4 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x58));
+            string text5 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x5C));
+            string text6 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x60));
+            string text7 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x64));
+            string text8 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x68));
+            string text9 = MamiesModGecko.peekStringUTF16(MamiesModGecko.peek(MamiesModGecko.peek(0x10AD1C58) + 0x68));
+            nintendoNetwork = text1 + text2 + text3 + text4 + text5 + text6 + text7 + text8 + text9;
+        }
+
+        private void activateTheCode_Click(object sender, EventArgs e)
+        {
+            if (codeText.Text != "")
+            {
+                codesList.Clear();
+                MamiesModGecko.addCodeToCodesList(codesList, codeText.Text);
+                MamiesModGecko.enableCodes(codesList);
+            }
+        }
+        #endregion
+
+        #region Credits
+        private void ntgamesChannelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://www.youtube.com/c/nt-games-ytb");
         }
+
+        private void daidoChannelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://www.youtube.com/channel/UCXRPjFwZ_IBuRsbiJ5GlXdg");
+        }
+
+        #endregion
     }
 }
