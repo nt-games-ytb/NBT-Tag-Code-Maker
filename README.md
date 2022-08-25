@@ -6,4 +6,4 @@ You can compile this with [Microsoft Visual Studio](https://visualstudio.microso
 
 # Credits
 **DAIDO0 or 少年革命家のんちゃんチャンネル** for making the 1st version.    
-**nt games** for and making the translation of the 1st version for making the code of the 2nd version.    
+**nt games** for making the translation of the 1st version and for making the code of the 2nd version.    
