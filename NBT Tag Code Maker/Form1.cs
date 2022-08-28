@@ -75,6 +75,7 @@ namespace NBT_Tag_Code_Maker
         public string nintendoNetwork;
         public string code;
         public List<uint> codesList = new List<uint> { };
+        private uint tagAddress = 0x12000000;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -278,6 +279,11 @@ namespace NBT_Tag_Code_Maker
         {
             Process.Start("https://minecraft-ids.grahamedgecombe.com/");
         }
+
+        private void tagAddressText_TextChanged(object sender, EventArgs e)
+        {
+            tagAddress = (uint)Convert.ToInt32(tagAddressText.Text, 16);
+        }
         #endregion
 
         #region Potion
@@ -413,50 +419,43 @@ namespace NBT_Tag_Code_Maker
         {
             #region Creative tab
             string CreativeTabAddress;
-
-            if (creativeTab.SelectedIndex == 0)
+            
+            if (creativeTab.SelectedIndex == 0) //Building blocks
             {
                 CreativeTabAddress = "10A0A6C0";
             }
+            else if (creativeTab.SelectedIndex == 1) //Decoration
+            {
+                CreativeTabAddress = "10A0A6D0";
+            }
+            else if (creativeTab.SelectedIndex == 2) //Redstone & Transportation
+            {
+                CreativeTabAddress = "10A0A6F0";
+            }
+            else if (creativeTab.SelectedIndex == 3) //Material
+            {
+                CreativeTabAddress = "10A0A700";
+            }
+            else if (creativeTab.SelectedIndex == 4) //Food
+            {
+                 CreativeTabAddress = "10A0A710";
+            }
+            else if (creativeTab.SelectedIndex == 5) //Tools, weapons, armor
+            {
+                CreativeTabAddress = "10A0A720";
+            }
+            else if (creativeTab.SelectedIndex == 6) //Brewing
+            {
+                CreativeTabAddress = "10A0A730";
+            }
+            else if (creativeTab.SelectedIndex == 7) //Other
+            {
+                CreativeTabAddress = "10A0A770";
+            }
             else
             {
-                if (creativeTab.SelectedIndex == 1)
-                {
-                    CreativeTabAddress = "10A0A6D0";
-                }
-                else
-                {
-                    if (creativeTab.SelectedIndex == 2)
-                    {
-                        CreativeTabAddress = "10A0A700";
-                    }
-                    else
-                    {
-                        if (creativeTab.SelectedIndex == 3)
-                        {
-                            CreativeTabAddress = "10A0A710";
-                        }
-                        else
-                        {
-                            if (creativeTab.SelectedIndex == 4)
-                            {
-                                CreativeTabAddress = "10A0A720";
-                            }
-                            else
-                            {
-                                if (creativeTab.SelectedIndex == 5)
-                                {
-                                    CreativeTabAddress = "10A0A770";
-                                }
-                                else
-                                {
-                                    MessageBox.Show("You have to choose a creative tab !", "NBT Tag Code Maker", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
+                MessageBox.Show("You have to choose a creative tab !", "NBT Tag Code Maker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             code =
@@ -477,18 +476,18 @@ namespace NBT_Tag_Code_Maker
                 "\r\n11120001 00000014" +
                 "\r\n0012000C " + convertToHex((int)itemNumber.Value) +
                 "\r\n00120020 " + convertToHex((int)itemDamage.Value) +
-                "\r\n00120018 12000000" +
+                "\r\n00120018 " + Convert.ToString(tagAddress, 16) +
                 "\r\nD0000000 DEADCAFE" +
 
-                "\r\n0100001C 12000000" +
+                "\r\n0100001C " + Convert.ToString(tagAddress, 16) +
                 "\r\n1058FA54 00A8A598" +
                 "\r\n00000011 00000001" +
                 "\r\n3F800000 00000011" +
-                "\r\n12000030 000000FF" +
-                "\r\n30000000 12000018" +
+                "\r\n" + Convert.ToString(tagAddress + 0x30, 16) + " 000000FF" +
+                "\r\n30000000 " + Convert.ToString(tagAddress + 0x18, 16) +
                 "\r\n10000000 50000000" +
-                "\r\n00120044 120000D4" +
-                "\r\n01000044 120000A0";
+                "\r\n00120044 " + Convert.ToString(tagAddress + 0xD4, 16) +
+                "\r\n01000044 " + Convert.ToString(tagAddress + 0xA0, 16);
             #endregion
 
             #region Unbreakable
@@ -510,44 +509,44 @@ namespace NBT_Tag_Code_Maker
             code = code +
                 "\r\n11B0D430 0000AFB8" +
                 "\r\n00000000 00000000" +
-                "\r\n11B0D430 120000E0" +
+                "\r\n11B0D430 " + Convert.ToString(tagAddress + 0xE0, 16) +
                 "\r\n00000000 00000017" +
-                "\r\n120000A0 12000134" +
+                "\r\n" + Convert.ToString(tagAddress + 0xA0, 16) + " " + Convert.ToString(tagAddress + 0x134, 16) +
                 "\r\n00000000 0000003B" +
                 "\r\n00000000 000000FF" +
-                "\r\n01000018 120000E0" +
+                "\r\n01000018 " + Convert.ToString(tagAddress + 0xE0, 16) +
                 "\r\n0055006E 00620072" +//Un br
                 "\r\n00650061 006B0061" +//ea ka
                 "\r\n0062006C 00650000" +//bl e
                 "\r\n00000000 000000FF" +
-                "\r\n01000030 12000110" +
+                "\r\n01000030 " + Convert.ToString(tagAddress + 0x110, 16) +
                 "\r\n11B0D430 0000AFB8" +
                 "\r\n00000000 00000000" +
-                "\r\n11B0D430 12000140" +
+                "\r\n11B0D430 " + Convert.ToString(tagAddress + 0x140, 16) +
                 "\r\n00000000 00000017" +
-                "\r\n12001000 12000184" +
+                "\r\n" + Convert.ToString(tagAddress + 0x1000, 16) + " " + Convert.ToString(tagAddress + 0x184, 16) +
                 "\r\n00000000 0000003B" +
                 "\r\n00000000 000000FF" +
-                "\r\n01000014 12000140" +
+                "\r\n01000014 " + Convert.ToString(tagAddress + 0x140, 16) +
                 "\r\n00640069 00730070" +//di sp
                 "\r\n006C0061 00790000" +//la y
                 "\r\n00000000 000000FF" +
-                "\r\n0100001C 12001000" +
+                "\r\n0100001C " + Convert.ToString(tagAddress + 0x1000, 16) +
                 "\r\n1058FA54 00A8A598" +
                 "\r\n00000011 00000001" +
                 "\r\n3F800000 00000011" +
-                "\r\n12001030 000000FF" +
-                "\r\n30000000 12001018" +
+                "\r\n" + Convert.ToString(tagAddress + 0x1030, 16) + " 000000FF" +
+                "\r\n30000000 " + Convert.ToString(tagAddress + 0x1018, 16) +
                 "\r\n10000000 50000000" +
-                "\r\n00120044 120010D4" +
-                "\r\n01000044 120010A0" +
+                "\r\n00120044 " + Convert.ToString(tagAddress + 0x10D4, 16) +
+                "\r\n01000044 " + Convert.ToString(tagAddress + 0x10A0, 16) +
                 "\r\n1065993C 00" + htmlValue.Text.Substring(1, 6) +
                 "\r\n00000000 00000000" +
                 "\r\n11B0D430 0000AFB8" +
                 "\r\n00000000 00000000" +
-                "\r\n11B0D430 120010E0" +
+                "\r\n11B0D430 " + Convert.ToString(tagAddress + 0x10E0, 16) +
                 "\r\n00000000 00000017" +
-                "\r\n120010A0 00000000" +
+                "\r\n" + Convert.ToString(tagAddress + 0x10A0, 16) + " 00000000" +
                 "\r\n00000000 0000003B" +
                 "\r\n00000000 000000FF";
             #endregion
@@ -557,28 +556,28 @@ namespace NBT_Tag_Code_Maker
             if (itemID.Value == 298)
             {
                 code = code +
-                    "\r\n0100000C 120010E0" +
+                    "\r\n0100000C " + Convert.ToString(tagAddress + 0x10E0, 16) +
                     "\r\n0063006F 006C006F" +//co lo
                     "\r\n00720000 000000FF";//r
             }
             if (itemID.Value == 299)
             {
                 code = code +
-                    "\r\n0100000C 120010E0" +
+                    "\r\n0100000C " + Convert.ToString(tagAddress + 0x10E0, 16) +
                     "\r\n0063006F 006C006F" +//co lo
                     "\r\n00720000 000000FF";//r
             }
             if (itemID.Value == 300)
             {
                 code = code +
-                    "\r\n0100000C 120010E0" +
+                    "\r\n0100000C " + Convert.ToString(tagAddress + 0x10E0, 16) +
                     "\r\n0063006F 006C006F" +//co lo
                     "\r\n00720000 000000FF";//r
             }
             if (itemID.Value == 301)
             {
                 code = code +
-                    "\r\n0100000C 120010E0" +
+                    "\r\n0100000C " + Convert.ToString(tagAddress + 0x10E0, 16) +
                     "\r\n0063006F 006C006F" +//co lo
                     "\r\n00720000 000000FF";//r
             }
@@ -588,7 +587,7 @@ namespace NBT_Tag_Code_Maker
             if (itemID.Value == 358)//map
             {
                 code = code +
-                    "\r\n01000014 120010E0" +
+                    "\r\n01000014 " + Convert.ToString(tagAddress + 0x10E0, 16) +
                     "\r\n004D0061 00700043" +//Ma pC
                     "\r\n006F006C 006F0072" +//ol or
                     "\r\n00000000 000000FF";
@@ -598,7 +597,7 @@ namespace NBT_Tag_Code_Maker
             if (colorBox.Enabled == false)
             {
                 code = code +
-                    "\r\n01000016 120010E0" +
+                    "\r\n01000016 " + Convert.ToString(tagAddress + 0x10E0, 16) +
                     "\r\n00000000 00000000" +
                     "\r\n00000000 00000000" +
                     "\r\n00000000 000000FF";
@@ -607,41 +606,41 @@ namespace NBT_Tag_Code_Maker
 
             #region Enchants, attributes and potions function
             code = code +
-                "\r\n01000030 12000160" +
+                "\r\n01000030 " + Convert.ToString(tagAddress + 0x160, 16) +
                 "\r\n11B0D430 0000AFB8" +
                 "\r\n00000000 00000000" +
-                "\r\n11B0D430 12000190" +
+                "\r\n11B0D430 " + Convert.ToString(tagAddress + 0x190, 16) +
                 "\r\n00000000 00000017" +
-                "\r\n12002000 120001D4" +
+                "\r\n" + Convert.ToString(tagAddress + 0x2000, 16) + " " + Convert.ToString(tagAddress + 0x1D4, 16) +
                 "\r\n00000000 0000003B" +
                 "\r\n00000000 000000FF" +
-                "\r\n01000014 12000190" +
+                "\r\n01000014 " + Convert.ToString(tagAddress + 0x190, 16) +
                 "\r\n0065006E 00630068" +//en ch
                 "\r\n00000000 00000000" +
                 "\r\n00000000 000000FF" +
-                "\r\n01000030 120001B0" +
+                "\r\n01000030 " + Convert.ToString(tagAddress + 0x1B0, 16) +
                 "\r\n11B0D430 0000AFB8" +
                 "\r\n00000000 00000000" +
-                "\r\n11B0D430 120001E0" +
+                "\r\n11B0D430 " + Convert.ToString(tagAddress + 0x1E0, 16) +
                 "\r\n00000000 00000017" +
-                "\r\n12005000 12000254" +
+                "\r\n" + Convert.ToString(tagAddress + 0x5000, 16) + " " + Convert.ToString(tagAddress + 0x254, 16) +
                 "\r\n00000000 0000003B" +
                 "\r\n00000000 000000FF" +
-                "\r\n01000026 120001E0" +
+                "\r\n01000026 " + Convert.ToString(tagAddress + 0x1E0, 16) +
                 "\r\n00410074 00740072" +//At tr
                 "\r\n00690062 00750074" +//ib ut
                 "\r\n0065004D 006F0064" +//eM od
                 "\r\n00690066 00690065" +//if ie
                 "\r\n00720073 000000FF" +//rs
-                "\r\n01000030 12000230" +
+                "\r\n01000030 " + Convert.ToString(tagAddress + 0x230, 16) +
                 "\r\n11B0D430 0000AFB8" +
                 "\r\n00000000 00000000" +
-                "\r\n11B0D430 12000260" +
+                "\r\n11B0D430 " + Convert.ToString(tagAddress + 0x260, 16) +
                 "\r\n00000000 00000017" +
-                "\r\n1200A000 00000000" +
+                "\r\n" + Convert.ToString(tagAddress + 0xA000, 16) + " 00000000" +
                 "\r\n00000000 0000003B" +
                 "\r\n00000000 000000FF" +
-                "\r\n0100002C 12000260" +
+                "\r\n0100002C " + Convert.ToString(tagAddress + 0x260, 16) +
                 "\r\n00430075 00730074" +//Cu st
                 "\r\n006F006D 0050006F" +//om Po
                 "\r\n00740069 006F006E" +//ti on
@@ -654,10 +653,10 @@ namespace NBT_Tag_Code_Maker
             if (enchantment.Checked)
             {
                 code = code +
-                "\r\n0100001C 12002000" +
+                "\r\n0100001C " + Convert.ToString(tagAddress + 0x2000, 16) +
                 "\r\n1067DAF0 00000000" +
-                "\r\n12002030 " + convertToHex(0x12002030 + enchantmentList.CheckedItems.Count * 4) +
-                "\r\n" + convertToHex(0x12002030 + enchantmentList.CheckedItems.Count * 4) + " 0A000000" +
+                "\r\n" + Convert.ToString(tagAddress + 0x2030, 16) + " " + convertToHex((int)tagAddress + 0x2030 + enchantmentList.CheckedItems.Count * 4) +
+                "\r\n" + convertToHex((int)tagAddress + 0x2030 + enchantmentList.CheckedItems.Count * 4) + " 0A000000" +
                 "\r\n00000000 000000FF";
 
                 int num2 = 0;
@@ -672,11 +671,11 @@ namespace NBT_Tag_Code_Maker
                     {
                         if (num2 % 2 == 0)
                         {
-                            text7 = text7 + convertToHex(0x12002130 + num2 * 320) + " ";
+                            text7 = text7 + convertToHex((int)tagAddress + 0x2130 + num2 * 320) + " ";
                         }
                         else
                         {
-                            text7 = text7 + convertToHex(0x12002130 + num2 * 320) + "\r\n";
+                            text7 = text7 + convertToHex((int)tagAddress + 0x2130 + num2 * 320) + "\r\n";
                         }
 
                         #region Enchantment string
@@ -839,38 +838,38 @@ namespace NBT_Tag_Code_Maker
                         #endregion
 
                         code = code +
-                            "\r\n0100001C " + convertToHex(0x12002130 + num3) +
+                            "\r\n0100001C " + convertToHex((int)tagAddress + 0x2130 + num3) +
                             "\r\n1058FA54 00A8A598" +
                             "\r\n00000011 00000001" +
                             "\r\n3F800000 00000011" +
-                            "\r\n" + convertToHex(0x12002160 + num3) + " 000000FF" +
-                            "\r\n30000000 " + convertToHex(0x12002148 + num3) +
+                            "\r\n" + convertToHex((int)tagAddress + 0x2160 + num3) + " 000000FF" +
+                            "\r\n30000000 " + convertToHex((int)tagAddress + 0x2148 + num3) +
                             "\r\n10000000 50000000" +
-                            "\r\n00120044 " + convertToHex(0x12002204 + num3) +
-                            "\r\n01000044 " + convertToHex(0x120021D0 + num3) +
+                            "\r\n00120044 " + convertToHex((int)tagAddress + 0x2204 + num3) +
+                            "\r\n01000044 " + convertToHex((int)tagAddress + 0x21D0 + num3) +
                             "\r\n10748CF8 " + enchantmentLevelString.Substring(4, 4) + "0000" +
                             "\r\n00000000 00000000" +
                             "\r\n11B0D430 00000000" +
                             "\r\n00000000 00000000" +
-                            "\r\n11B0D430 " + convertToHex(0x12002210 + num3) +
+                            "\r\n11B0D430 " + convertToHex((int)tagAddress + 0x2210 + num3) +
                             "\r\n00000000 00000017" +
-                            "\r\n" + convertToHex(0x120021D0 + num3) + " " + convertToHex(0x12002254 + num3) +
+                            "\r\n" + convertToHex((int)tagAddress + 0x21D0 + num3) + " " + convertToHex((int)tagAddress + 0x2254 + num3) +
                             "\r\n00000000 0000003B" +
                             "\r\n00000000 000000FF" +
-                            "\r\n0100000C " + convertToHex(0x12002210 + num3) +
+                            "\r\n0100000C " + convertToHex((int)tagAddress + 0x2210 + num3) +
                             "\r\n006C0076 006C0000" +//lv l
                             "\r\n00000000 000000FF" +
-                            "\r\n01000044 " + convertToHex(0x12002220 + num3) +
+                            "\r\n01000044 " + convertToHex((int)tagAddress + 0x2220 + num3) +
                             "\r\n10748CF8 " + enchantmentString.Substring(4, 4) + "0000" +
                             "\r\n00000000 00000000" +
                             "\r\n11B0D430 00000000" +
                             "\r\n00000000 00000000" +
-                            "\r\n11B0D430 " + convertToHex(0x12002260 + num3) +
+                            "\r\n11B0D430 " + convertToHex((int)tagAddress + 0x2260 + num3) +
                             "\r\n00000000 00000017" +
-                            "\r\n" + convertToHex(0x12002220 + num3) + " 00000000" +
+                            "\r\n" + convertToHex((int)tagAddress + 0x2220 + num3) + " 00000000" +
                             "\r\n00000000 0000003B" +
                             "\r\n00000000 000000FF" +
-                            "\r\n0100000C " + convertToHex(0x12002260 + num3) +
+                            "\r\n0100000C " + convertToHex((int)tagAddress + 0x2260 + num3) +
                             "\r\n00690064 00000000" +//id
                             "\r\n00000000 000000FF";
 
@@ -883,14 +882,14 @@ namespace NBT_Tag_Code_Maker
                 if (num2 % 2 == 1)
                 {
                     code = code +
-                        "\r\n0100" + convertToHex(enchantmentList.CheckedItems.Count * 4 + 8).Substring(4, 4) + " 12002030" +
+                        "\r\n0100" + convertToHex(enchantmentList.CheckedItems.Count * 4 + 8).Substring(4, 4) + " " + Convert.ToString(tagAddress + 0x2030, 16) +
                         "\r\n" + text7 + "00000000" +
                         "\r\n00000000 000000FF";
                 }
                 else
                 {
                     code = code +
-                        "\r\n0100" + convertToHex(enchantmentList.CheckedItems.Count * 4 + 4).Substring(4, 4) + " 12002030" +
+                        "\r\n0100" + convertToHex(enchantmentList.CheckedItems.Count * 4 + 4).Substring(4, 4) + " " + Convert.ToString(tagAddress + 0x2030, 16) +
                         "\r\n" + text7 +
                         "\r\n00000000 000000FF";
                 }
@@ -898,7 +897,7 @@ namespace NBT_Tag_Code_Maker
             else
             {
                 code = code +
-                    "\r\n0100000C 12002000" +
+                    "\r\n0100000C " + Convert.ToString(tagAddress + 0x2000, 16) +
                     "\r\n1065993C 00000000" +
                     "\r\n00000000 000000FF";
             }
@@ -908,10 +907,10 @@ namespace NBT_Tag_Code_Maker
             if (attribute.Checked)
             {
                 code = code +
-                    "\r\n0100001C 12005000" +
+                    "\r\n0100001C " + Convert.ToString(tagAddress + 0x5000, 16) +
                     "\r\n1067DAF0 00000000" +
-                    "\r\n12005030 " + convertToHex(0x12005030 + attributeList.CheckedItems.Count * 4) +
-                    "\r\n" + convertToHex(0x12005030 + attributeList.CheckedItems.Count * 4) + " 0A000000" +
+                    "\r\n" + Convert.ToString(tagAddress + 0x5030, 16) + " " + convertToHex((int)tagAddress + 0x5030 + attributeList.CheckedItems.Count * 4) +
+                    "\r\n" + convertToHex((int)tagAddress + 0x5030 + attributeList.CheckedItems.Count * 4) + " 0A000000" +
                     "\r\n00000000 000000FF";
 
                 int num2 = 0;
@@ -926,11 +925,11 @@ namespace NBT_Tag_Code_Maker
                     {
                         if (num2 % 2 == 0)
                         {
-                            text7 = text7 + convertToHex(0x12005130 + num2 * 336) + " ";
+                            text7 = text7 + convertToHex((int)tagAddress + 0x5130 + num2 * 336) + " ";
                         }
                         else
                         {
-                            text7 = text7 + convertToHex(0x12005130 + num2 * 336) + "\r\n";
+                            text7 = text7 + convertToHex((int)tagAddress + 0x5130 + num2 * 336) + "\r\n";
                         }
 
                         #region Attribute string
@@ -989,38 +988,38 @@ namespace NBT_Tag_Code_Maker
                         #endregion
 
                         code = code +
-                            "\r\n0100001C " + convertToHex(0x12005130 + num3) +
+                            "\r\n0100001C " + convertToHex((int)tagAddress + 0x5130 + num3) +
                             "\r\n1058FA54 00A8A598" +
                             "\r\n00000011 00000001" +
                             "\r\n3F800000 00000011" +
-                            "\r\n" + convertToHex(0x12005160 + num3) + " 000000FF" +
-                            "\r\n30000000 " + convertToHex(0x12005148 + num3) +
+                            "\r\n" + convertToHex((int)tagAddress + 0x5160 + num3) + " 000000FF" +
+                            "\r\n30000000 " + convertToHex((int)tagAddress + 0x5148 + num3) +
                             "\r\n10000000 50000000" +
-                            "\r\n00120044 " + convertToHex(0x12005204 + num3) +
-                            "\r\n01000044 " + convertToHex(0x120051D0 + num3) +
+                            "\r\n00120044 " + convertToHex((int)tagAddress + 0x5204 + num3) +
+                            "\r\n01000044 " + convertToHex((int)tagAddress + 0x51D0 + num3) +
                             "\r\n1065993C " + attributeString +
                             "\r\n00000000 00000000" +
                             "\r\n11B0D430 00000000" +
                             "\r\n00000000 00000000" +
-                            "\r\n11B0D430 " + convertToHex(0x12005210 + num3) +
+                            "\r\n11B0D430 " + convertToHex((int)tagAddress + 0x5210 + num3) +
                             "\r\n00000000 00000017" +
-                            "\r\n" + convertToHex(0x120051D0 + num3) + " " + convertToHex(0x12005254 + num3) +
+                            "\r\n" + convertToHex((int)tagAddress + 0x51D0 + num3) + " " + convertToHex((int)tagAddress + 0x5254 + num3) +
                             "\r\n00000000 0000003B" +
                             "\r\n00000000 000000FF" +
-                            "\r\n0100000C " + convertToHex(0x12005210 + num3) +
+                            "\r\n0100000C " + convertToHex((int)tagAddress + 0x5210 + num3) +
                             "\r\n00490044 00000000" +//ID
                             "\r\n00000000 000000FF" +
-                            "\r\n01000044 " + convertToHex(0x12005220 + num3) +
+                            "\r\n01000044 " + convertToHex((int)tagAddress + 0x5220 + num3) +
                             "\r\n105C76B4 00000000" +
                             "\r\n" + string.Join("", attributeLevelString).Substring(0, 8) + " 00000000" +
                             "\r\n11B0D430 00000000" +
                             "\r\n00000000 00000000" +
-                            "\r\n11B0D430 " + convertToHex(0x12005260 + num3) +
+                            "\r\n11B0D430 " + convertToHex((int)tagAddress + 0x5260 + num3) +
                             "\r\n00000000 00000017" +
-                            "\r\n" + convertToHex(0x12005220 + num3) + " 00000000" +
+                            "\r\n" + convertToHex((int)tagAddress + 0x5220 + num3) + " 00000000" +
                             "\r\n00000000 0000003B" +
                             "\r\n00000000 000000FF" +
-                            "\r\n0100000E " + convertToHex(0x12005260 + num3) +
+                            "\r\n0100000E " + convertToHex((int)tagAddress + 0x5260 + num3) +
                             "\r\n0041006D 006F0075" +//Am ou
                             "\r\n006E0074 000000FF";//nt
 
@@ -1033,14 +1032,14 @@ namespace NBT_Tag_Code_Maker
                 if (num2 % 2 == 1)
                 {
                     code = code +
-                        "\r\n0100" + convertToHex(attributeList.CheckedItems.Count * 4 + 8).Substring(4, 4) + " 12005030" +
+                        "\r\n0100" + convertToHex(attributeList.CheckedItems.Count * 4 + 8).Substring(4, 4) + " " + Convert.ToString(tagAddress + 0x5030, 16) +
                         "\r\n" + text7 + "00000000" +
                         "\r\n00000000 000000FF";
                 }
                 else
                 {
                     code = code +
-                        "\r\n0100" + convertToHex(attributeList.CheckedItems.Count * 4 + 4).Substring(4, 4) + " 12005030" +
+                        "\r\n0100" + convertToHex(attributeList.CheckedItems.Count * 4 + 4).Substring(4, 4) + " " + Convert.ToString(tagAddress + 0x5030, 16) +
                         "\r\n" + text7 +
                         "\r\n00000000 000000FF";
                 }
@@ -1048,7 +1047,7 @@ namespace NBT_Tag_Code_Maker
             else
             {
                 code = code +
-                    "\r\n0100000C 12005000" +
+                    "\r\n0100000C " + Convert.ToString(tagAddress + 0x5000, 16) +
                     "\r\n1065993C 00000000" +
                     "\r\n00000000 000000FF";
             }
@@ -1058,10 +1057,10 @@ namespace NBT_Tag_Code_Maker
             if (potionBox.Enabled == true)
             {
                 code = code +
-                    "\r\n0100001C 1200A000" +
+                    "\r\n0100001C " + Convert.ToString(tagAddress + 0xA000, 16) +
                     "\r\n1067DAF0 00000000" +
-                    "\r\n1200A030 " + convertToHex(0x1200A030 + potionList.CheckedItems.Count * 4) +
-                    "\r\n" + convertToHex(0x1200A030 + potionList.CheckedItems.Count * 4) + " 0A000000" +
+                    "\r\n" + Convert.ToString(tagAddress + 0xA030, 16) + " " + convertToHex((int)tagAddress + 0xA030 + potionList.CheckedItems.Count * 4) +
+                    "\r\n" + convertToHex((int)tagAddress + 0xA030 + potionList.CheckedItems.Count * 4) + " 0A000000" +
                     "\r\n00000000 000000FF";
 
                 int num2 = 0;
@@ -1076,11 +1075,11 @@ namespace NBT_Tag_Code_Maker
                     {
                         if (num2 % 2 == 0)
                         {
-                            text7 = text7 + convertToHex(0x1200A130 + num2 * 464) + " ";
+                            text7 = text7 + convertToHex((int)tagAddress + 0xA130 + num2 * 464) + " ";
                         }
                         else
                         {
-                            text7 = text7 + convertToHex(0x1200A130 + num2 * 464) + "\r\n";
+                            text7 = text7 + convertToHex((int)tagAddress + 0xA130 + num2 * 464) + "\r\n";
                         }
 
                         #region Potion effect string
@@ -1215,52 +1214,52 @@ namespace NBT_Tag_Code_Maker
                         #endregion
 
                         code = code +
-                            "\r\n0100001C " + convertToHex(0x1200A130 + num3) +
+                            "\r\n0100001C " + convertToHex((int)tagAddress + 0xA130 + num3) +
                             "\r\n1058FA54 00A8A598" +
                             "\r\n00000011 00000001" +
                             "\r\n3F800000 00000011" +
-                            "\r\n" + convertToHex(0x1200A160 + num3) + " 000000FF" +
-                            "\r\n30000000 " + convertToHex(0x1200A148 + num3) +
+                            "\r\n" + convertToHex((int)tagAddress + 0xA160 + num3) + " 000000FF" +
+                            "\r\n30000000 " + convertToHex((int)tagAddress + 0xA148 + num3) +
                             "\r\n10000000 50000000" +
-                            "\r\n00120044 " + convertToHex(0x1200A204 + num3) +
-                            "\r\n01000044 " + convertToHex(0x1200A1D0 + num3) +
+                            "\r\n00120044 " + convertToHex((int)tagAddress + 0xA204 + num3) +
+                            "\r\n01000044 " + convertToHex((int)tagAddress + 0xA1D0 + num3) +
                             "\r\n1065993C " + potionEffectString +
                             "\r\n00000000 00000000" +
                             "\r\n11B0D430 00000000" +
                             "\r\n00000000 00000000" +
-                            "\r\n11B0D430 " + convertToHex(0x1200A210 + num3) +
+                            "\r\n11B0D430 " + convertToHex((int)tagAddress + 0xA210 + num3) +
                             "\r\n00000000 00000017" +
-                            "\r\n" + convertToHex(0x1200A1D0 + num3) + " " + convertToHex(0x1200A254 + num3) +
+                            "\r\n" + convertToHex((int)tagAddress + 0xA1D0 + num3) + " " + convertToHex((int)tagAddress + 0xA254 + num3) +
                             "\r\n00000000 0000003B" +
                             "\r\n00000000 000000FF" +
-                            "\r\n0100000C " + convertToHex(0x1200A210 + num3) +
+                            "\r\n0100000C " + convertToHex((int)tagAddress + 0xA210 + num3) +
                             "\r\n00490064 00000000" +//ID
                             "\r\n00000000 000000FF" +
-                            "\r\n01000044 " + convertToHex(0x1200A220 + num3) +
+                            "\r\n01000044 " + convertToHex((int)tagAddress + 0xA220 + num3) +
                             "\r\n1065993C " + potionDurationString +
                             "\r\n00000000 00000000" +
                             "\r\n11B0D430 00000000" +
                             "\r\n00000000 00000000" +
-                            "\r\n11B0D430 " + convertToHex(0x1200A260 + num3) +
+                            "\r\n11B0D430 " + convertToHex((int)tagAddress + 0xA260 + num3) +
                             "\r\n00000000 00000017" +
-                            "\r\n" + convertToHex(0x1200A220 + num3) + " " + convertToHex(0x1200A2C4 + num3) +
+                            "\r\n" + convertToHex((int)tagAddress + 0xA220 + num3) + " " + convertToHex((int)tagAddress + 0xA2C4 + num3) +
                             "\r\n00000000 0000003B" +
                             "\r\n00000000 000000FF" +
-                            "\r\n01000014 " + convertToHex(0x1200A260 + num3) +
+                            "\r\n01000014 " + convertToHex((int)tagAddress + 0xA260 + num3) +
                             "\r\n00440075 00720061" +//Du ra
                             "\r\n00740069 006F006E" +//ti on
                             "\r\n00000000 000000FF" +
-                            "\r\n01000044 " + convertToHex(0x1200A290 + num3) +
+                            "\r\n01000044 " + convertToHex((int)tagAddress + 0xA290 + num3) +
                             "\r\n1065993C " + potionLevelString +
                             "\r\n00000000 00000000" +
                             "\r\n11B0D430 00000000" +
                             "\r\n00000000 00000000" +
-                            "\r\n11B0D430 " + convertToHex(0x1200A2D0 + num3) +
+                            "\r\n11B0D430 " + convertToHex((int)tagAddress + 0xA2D0 + num3) +
                             "\r\n00000000 00000017" +
-                            "\r\n" + convertToHex(0x1200A290 + num3) + " 00000000" +
+                            "\r\n" + convertToHex((int)tagAddress + 0xA290 + num3) + " 00000000" +
                             "\r\n00000000 0000003B" +
                             "\r\n00000000 000000FF" +
-                            "\r\n01000014 " + convertToHex(0x1200A2D0 + num3) +
+                            "\r\n01000014 " + convertToHex((int)tagAddress + 0xA2D0 + num3) +
                             "\r\n0041006D 0070006C" +//Am pl
                             "\r\n00690066 00690065" +//if ie
                             "\r\n00720000 000000FF";//r
@@ -1274,14 +1273,14 @@ namespace NBT_Tag_Code_Maker
                 if (num2 % 2 == 1)
                 {
                     code = code +
-                        "\r\n0100" + convertToHex(potionList.CheckedItems.Count * 4 + 8).Substring(4, 4) + " 1200A030" +
+                        "\r\n0100" + convertToHex(potionList.CheckedItems.Count * 4 + 8).Substring(4, 4) + " " + Convert.ToString(tagAddress + 0xA030, 16) +
                         "\r\n" + text7 + "00000000" +
                         "\r\n00000000 000000FF";
                 }
                 else
                 {
                     code = code +
-                        "\r\n0100" + convertToHex(potionList.CheckedItems.Count * 4 + 4).Substring(4, 4) + " 1200A030" +
+                        "\r\n0100" + convertToHex(potionList.CheckedItems.Count * 4 + 4).Substring(4, 4) + " " + Convert.ToString(tagAddress + 0xA030, 16) +
                         "\r\n" + text7 +
                         "\r\n00000000 000000FF";
                 }
@@ -1289,10 +1288,12 @@ namespace NBT_Tag_Code_Maker
             else
             {
                 code = code +
-                    "\r\n0100000C 1200A000" +
+                    "\r\n0100000C " + Convert.ToString(tagAddress + 0xA000, 16) +
                     "\r\n1065993C 00000000" +
                     "\r\n00000000 000000FF";
             }
+
+            code = code + "\r\nD0000000 DEADCAFE";
             #endregion
         }
 
@@ -1307,12 +1308,14 @@ namespace NBT_Tag_Code_Maker
 
         private void make_Click(object sender, EventArgs e)
         {
+            tagAddress = (uint)Convert.ToInt32(tagAddressText.Text, 16);
             makeCode();
             codeText.Text = code;
         }
 
         private void makeAndAdd_Click(object sender, EventArgs e)
         {
+            tagAddress = (uint)Convert.ToInt32(tagAddressText.Text, 16) + 0x00010000;
             makeCode();
             codeText.Text = codeText.Text + "\r\n" + code;
         }
@@ -1426,6 +1429,28 @@ namespace NBT_Tag_Code_Maker
         private void daidoChannelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://www.youtube.com/channel/UCXRPjFwZ_IBuRsbiJ5GlXdg");
+        }
+        #endregion
+
+        #region Load and Save
+        private void loadCode_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveCode_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void loadTag_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveTag_Click(object sender, EventArgs e)
+        {
+
         }
         #endregion
     }

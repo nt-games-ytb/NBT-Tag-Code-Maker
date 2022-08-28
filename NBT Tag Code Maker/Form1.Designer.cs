@@ -64,6 +64,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.enchantmentText = new System.Windows.Forms.ComboBox();
             this.optionBox = new System.Windows.Forms.GroupBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.tagAddressText = new System.Windows.Forms.TextBox();
             this.info = new System.Windows.Forms.Button();
             this.itemIdList = new System.Windows.Forms.Button();
             this.attributeBox = new System.Windows.Forms.GroupBox();
@@ -99,8 +101,12 @@
             this.disconnect = new System.Windows.Forms.Button();
             this.connect = new System.Windows.Forms.Button();
             this.connectionBox = new System.Windows.Forms.GroupBox();
-            this.ipText = new System.Windows.Forms.TextBox();
             this.activateTheCode = new System.Windows.Forms.Button();
+            this.ipText = new System.Windows.Forms.TextBox();
+            this.loadCode = new System.Windows.Forms.Button();
+            this.saveCode = new System.Windows.Forms.Button();
+            this.saveTag = new System.Windows.Forms.Button();
+            this.loadTag = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.itemPlace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemDamage)).BeginInit();
@@ -136,9 +142,11 @@
             this.creativeTab.Items.AddRange(new object[] {
             "Building blocks",
             "Decoration",
+            "Redstone & Transportation",
             "Material",
             "Food",
             "Tools, weapons, armor",
+            "Brewing",
             "Other"});
             this.creativeTab.Location = new System.Drawing.Point(101, 15);
             this.creativeTab.Margin = new System.Windows.Forms.Padding(4);
@@ -681,6 +689,8 @@
             // 
             // optionBox
             // 
+            this.optionBox.Controls.Add(this.label20);
+            this.optionBox.Controls.Add(this.tagAddressText);
             this.optionBox.Controls.Add(this.info);
             this.optionBox.Controls.Add(this.itemIdList);
             this.optionBox.Controls.Add(this.label1);
@@ -704,6 +714,28 @@
             this.optionBox.TabStop = false;
             this.optionBox.Text = "Option";
             // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.ForeColor = System.Drawing.Color.White;
+            this.label20.Location = new System.Drawing.Point(146, 154);
+            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(63, 32);
+            this.label20.TabIndex = 28;
+            this.label20.Text = "Tag\r\naddress :";
+            // 
+            // tagAddressText
+            // 
+            this.tagAddressText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tagAddressText.Location = new System.Drawing.Point(211, 160);
+            this.tagAddressText.MaxLength = 8;
+            this.tagAddressText.Name = "tagAddressText";
+            this.tagAddressText.Size = new System.Drawing.Size(83, 26);
+            this.tagAddressText.TabIndex = 27;
+            this.tagAddressText.Text = "12000000";
+            this.tagAddressText.TextChanged += new System.EventHandler(this.tagAddressText_TextChanged);
+            // 
             // info
             // 
             this.info.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -721,7 +753,7 @@
             this.itemIdList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.itemIdList.Location = new System.Drawing.Point(10, 156);
             this.itemIdList.Name = "itemIdList";
-            this.itemIdList.Size = new System.Drawing.Size(283, 30);
+            this.itemIdList.Size = new System.Drawing.Size(136, 30);
             this.itemIdList.TabIndex = 13;
             this.itemIdList.Text = "Item ID list";
             this.itemIdList.UseVisualStyleBackColor = true;
@@ -1035,7 +1067,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(27, 595);
+            this.label17.Location = new System.Drawing.Point(27, 620);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(168, 16);
             this.label17.TabIndex = 24;
@@ -1045,7 +1077,7 @@
             // 
             this.ntgamesChannelLink.AutoSize = true;
             this.ntgamesChannelLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ntgamesChannelLink.Location = new System.Drawing.Point(191, 595);
+            this.ntgamesChannelLink.Location = new System.Drawing.Point(191, 620);
             this.ntgamesChannelLink.Name = "ntgamesChannelLink";
             this.ntgamesChannelLink.Size = new System.Drawing.Size(62, 16);
             this.ntgamesChannelLink.TabIndex = 25;
@@ -1056,16 +1088,16 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(728, 595);
+            this.label18.Location = new System.Drawing.Point(728, 620);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(73, 16);
             this.label18.TabIndex = 26;
-            this.label18.Text = "Version 2.1";
+            this.label18.Text = "Version 2.2";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(249, 595);
+            this.label19.Location = new System.Drawing.Point(249, 620);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(175, 16);
             this.label19.TabIndex = 27;
@@ -1075,7 +1107,7 @@
             // 
             this.daidoChannelLink.AutoSize = true;
             this.daidoChannelLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.daidoChannelLink.Location = new System.Drawing.Point(420, 595);
+            this.daidoChannelLink.Location = new System.Drawing.Point(420, 620);
             this.daidoChannelLink.Name = "daidoChannelLink";
             this.daidoChannelLink.Size = new System.Drawing.Size(56, 16);
             this.daidoChannelLink.TabIndex = 28;
@@ -1129,22 +1161,12 @@
             this.connectionBox.Controls.Add(this.disconnect);
             this.connectionBox.Controls.Add(this.connect);
             this.connectionBox.ForeColor = System.Drawing.Color.White;
-            this.connectionBox.Location = new System.Drawing.Point(30, 533);
+            this.connectionBox.Location = new System.Drawing.Point(30, 558);
             this.connectionBox.Name = "connectionBox";
             this.connectionBox.Size = new System.Drawing.Size(771, 59);
             this.connectionBox.TabIndex = 30;
             this.connectionBox.TabStop = false;
             this.connectionBox.Text = "Connection";
-            // 
-            // ipText
-            // 
-            this.ipText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ipText.Location = new System.Drawing.Point(6, 22);
-            this.ipText.Name = "ipText";
-            this.ipText.Size = new System.Drawing.Size(140, 26);
-            this.ipText.TabIndex = 26;
-            this.ipText.Text = "192.168.";
-            this.ipText.TextChanged += new System.EventHandler(this.ipText_TextChanged);
             // 
             // activateTheCode
             // 
@@ -1158,11 +1180,69 @@
             this.activateTheCode.UseVisualStyleBackColor = true;
             this.activateTheCode.Click += new System.EventHandler(this.activateTheCode_Click);
             // 
+            // ipText
+            // 
+            this.ipText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ipText.Location = new System.Drawing.Point(6, 22);
+            this.ipText.Name = "ipText";
+            this.ipText.Size = new System.Drawing.Size(140, 26);
+            this.ipText.TabIndex = 26;
+            this.ipText.Text = "192.168.";
+            this.ipText.TextChanged += new System.EventHandler(this.ipText_TextChanged);
+            // 
+            // loadCode
+            // 
+            this.loadCode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.loadCode.Location = new System.Drawing.Point(30, 529);
+            this.loadCode.Name = "loadCode";
+            this.loadCode.Size = new System.Drawing.Size(188, 30);
+            this.loadCode.TabIndex = 31;
+            this.loadCode.Text = "Load code";
+            this.loadCode.UseVisualStyleBackColor = true;
+            this.loadCode.Click += new System.EventHandler(this.loadCode_Click);
+            // 
+            // saveCode
+            // 
+            this.saveCode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.saveCode.Location = new System.Drawing.Point(225, 529);
+            this.saveCode.Name = "saveCode";
+            this.saveCode.Size = new System.Drawing.Size(188, 30);
+            this.saveCode.TabIndex = 32;
+            this.saveCode.Text = "Save code";
+            this.saveCode.UseVisualStyleBackColor = true;
+            this.saveCode.Click += new System.EventHandler(this.saveCode_Click);
+            // 
+            // saveTag
+            // 
+            this.saveTag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.saveTag.Location = new System.Drawing.Point(613, 529);
+            this.saveTag.Name = "saveTag";
+            this.saveTag.Size = new System.Drawing.Size(188, 30);
+            this.saveTag.TabIndex = 33;
+            this.saveTag.Text = "Save tag";
+            this.saveTag.UseVisualStyleBackColor = true;
+            this.saveTag.Click += new System.EventHandler(this.saveTag_Click);
+            // 
+            // loadTag
+            // 
+            this.loadTag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.loadTag.Location = new System.Drawing.Point(419, 529);
+            this.loadTag.Name = "loadTag";
+            this.loadTag.Size = new System.Drawing.Size(188, 30);
+            this.loadTag.TabIndex = 34;
+            this.loadTag.Text = "Load tag";
+            this.loadTag.UseVisualStyleBackColor = true;
+            this.loadTag.Click += new System.EventHandler(this.loadTag_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 625);
+            this.ClientSize = new System.Drawing.Size(825, 650);
+            this.Controls.Add(this.loadTag);
+            this.Controls.Add(this.saveTag);
+            this.Controls.Add(this.saveCode);
+            this.Controls.Add(this.loadCode);
             this.Controls.Add(this.connectionBox);
             this.Controls.Add(this.codeBox);
             this.Controls.Add(this.daidoChannelLink);
@@ -1291,6 +1371,12 @@
         private System.Windows.Forms.GroupBox connectionBox;
         private System.Windows.Forms.TextBox ipText;
         private System.Windows.Forms.Button activateTheCode;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox tagAddressText;
+        private System.Windows.Forms.Button loadCode;
+        private System.Windows.Forms.Button saveCode;
+        private System.Windows.Forms.Button saveTag;
+        private System.Windows.Forms.Button loadTag;
     }
 }
 
