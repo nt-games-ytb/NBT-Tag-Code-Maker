@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
+using System.Threading;
 using MamiesModGecko;
 
 namespace MamiesModGecko
@@ -73,12 +73,13 @@ namespace MamiesModGecko
 
         public ETCPGeckoException(ETCPErrorCode code)
         {
-            this.PErrorCode = code;
+            PErrorCode = code;
         }
     }
 
     public class TCPGecko
     {
+        #region Original code with some modifications
         private TCPConn ptcp;
 
         #region base constants
@@ -87,8 +88,9 @@ namespace MamiesModGecko
         private const Byte cmd_poke16 = 0x02;
         private const Byte cmd_pokemem = 0x03;
         private const Byte cmd_readmem = 0x04;
-        private const Byte cmd_writekern = 0x0b;
-        private const Byte cmd_readkern = 0x0c;
+        private const Byte cmd_writekern = 0x0B;
+        private const Byte cmd_readkern = 0x0C;
+        private const Byte cmd_rpc = 0x70;
         private const Byte cmd_os_version = 0x9A;
 
         private const Byte GCFAIL = 0xCC;
@@ -106,15 +108,15 @@ namespace MamiesModGecko
 
         public TCPGecko(string ip)
         {
-            this.ptcp = new TCPConn(ip, 7331);
-            this.Connected = false;
-            this.PChunkUpdate = null;
+            ptcp = new TCPConn(ip, 7331);
+            Connected = false;
+            PChunkUpdate = null;
         }
 
         ~TCPGecko()
         {
-            if (this.Connected)
-                this.Disconnect();
+            if (Connected)
+                Disconnect();
         }
 
         private bool InitGecko()
@@ -125,35 +127,35 @@ namespace MamiesModGecko
 
         public bool Connect()
         {
-            if (this.Connected)
+            if (Connected)
             {
-                this.Disconnect();
+                Disconnect();
             }
 
-            this.Connected = false;
+            Connected = false;
 
             //Open TCP Gecko
             try
             {
-                this.ptcp.Connect();
+                ptcp.Connect();
             }
             catch (IOException)
             {
                 // Don't disconnect if there's nothing connected
-                this.Disconnect();
+                Disconnect();
                 throw new ETCPGeckoException(ETCPErrorCode.noTCPGeckoFound);
             }
 
             System.Threading.Thread.Sleep(150);
-            this.Connected = true;
+            Connected = true;
 
             return true;
         }
 
         public bool Disconnect()
         {
-            this.Connected = false;
-            this.ptcp.Close();
+            Connected = false;
+            ptcp.Close();
 
             return false;
         }
@@ -161,18 +163,18 @@ namespace MamiesModGecko
         //Send update on a running process to the parent class
         protected void SendUpdate(UInt32 address, UInt32 currentchunk, UInt32 allchunks, UInt32 transferred, UInt32 length, bool okay, bool dump)
         {
-            if (this.PChunkUpdate != null)
-                this.PChunkUpdate(address, currentchunk, allchunks, transferred, length, okay, dump);
+            if (PChunkUpdate != null)
+                PChunkUpdate(address, currentchunk, allchunks, transferred, length, okay, dump);
         }
 
         public UInt32 OsVersionRequest()
         {
-            if (this.RawCommand(cmd_os_version) != FTDICommand.CMD_OK)
+            if (RawCommand(cmd_os_version) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             Byte[] buffer = new Byte[4];
 
-            if (this.GeckoRead(buffer, 4) != FTDICommand.CMD_OK)
+            if (GeckoRead(buffer, 4) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             return ByteSwap.Swap(BitConverter.ToUInt32(buffer, 0));
@@ -185,11 +187,11 @@ namespace MamiesModGecko
 
             try
             {
-                this.ptcp.Read(recbyte, nobytes, ref bytes_read);
+                ptcp.Read(recbyte, nobytes, ref bytes_read);
             }
             catch (IOException)
             {
-                this.Disconnect();
+                Disconnect();
                 return FTDICommand.CMD_FatalError;       // fatal error
             }
             if (bytes_read != nobytes)
@@ -206,11 +208,11 @@ namespace MamiesModGecko
 
             try
             {
-                this.ptcp.Write(sendbyte, nobytes, ref bytes_written);
+                ptcp.Write(sendbyte, nobytes, ref bytes_written);
             }
             catch (IOException)
             {
-                this.Disconnect();
+                Disconnect();
                 return FTDICommand.CMD_FatalError;       // fatal error
             }
             if (bytes_written != nobytes)
@@ -224,7 +226,7 @@ namespace MamiesModGecko
         //Allows sending a basic one byte command to the Wii U
         public FTDICommand RawCommand(Byte id)
         {
-            return this.GeckoWrite(BitConverter.GetBytes(id), 1);
+            return GeckoWrite(BitConverter.GetBytes(id), 1);
         }
         #endregion
 
@@ -232,13 +234,13 @@ namespace MamiesModGecko
         public void Dump(UInt32 startdump, UInt32 enddump, Stream saveStream)
         {
             Stream[] tempStream = { saveStream };
-            this.Dump(startdump, enddump, tempStream);
+            Dump(startdump, enddump, tempStream);
         }
 
         public void Dump(UInt32 startdump, UInt32 enddump, Stream[] saveStream)
         {
             //Reset connection
-            this.InitGecko();
+            InitGecko();
 
             if (ValidMemory.RangeCheckId(startdump) != ValidMemory.RangeCheckId(enddump))
             {
@@ -261,14 +263,14 @@ namespace MamiesModGecko
                 allchunks++;
 
             UInt64 GeckoMemRange = ByteSwap.Swap((UInt64)(((UInt64)startdump << 32) + ((UInt64)enddump)));
-            if (this.GeckoWrite(BitConverter.GetBytes(cmd_readmem), 1) != FTDICommand.CMD_OK)
+            if (GeckoWrite(BitConverter.GetBytes(cmd_readmem), 1) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             //Read reply - expcecting GCACK -- nope, too slow, TCP is reliable!
             Byte retry = 0;
 
             //Now let's send the dump information
-            if (this.GeckoWrite(BitConverter.GetBytes(GeckoMemRange), 8) != FTDICommand.CMD_OK)
+            if (GeckoWrite(BitConverter.GetBytes(GeckoMemRange), 8) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             //We start with chunk 0
@@ -277,19 +279,19 @@ namespace MamiesModGecko
 
             // Reset cancel flag
             bool done = false;
-            this.CancelDump = false;
+            CancelDump = false;
 
             Byte[] buffer = new Byte[packetsize]; //read buffer
             while (chunk < fullchunks && !done)
             {
                 //No output yet availible
-                this.SendUpdate(startdump + chunk * packetsize, chunk, allchunks, chunk * packetsize, memlength, retry == 0, true);
+                SendUpdate(startdump + chunk * packetsize, chunk, allchunks, chunk * packetsize, memlength, retry == 0, true);
                 //Set buffer
                 Byte[] response = new Byte[1];
-                if (this.GeckoRead(response, 1) != FTDICommand.CMD_OK)
+                if (GeckoRead(response, 1) != FTDICommand.CMD_OK)
                 {
                     //Major fail, give it up
-                    this.GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
+                    GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
                     throw new ETCPGeckoException(ETCPErrorCode.FTDIReadDataError);
                 }
                 Byte reply = response[0];
@@ -302,14 +304,14 @@ namespace MamiesModGecko
                 }
                 else
                 {
-                    FTDICommand returnvalue = this.GeckoRead(buffer, packetsize);
+                    FTDICommand returnvalue = GeckoRead(buffer, packetsize);
                     if (returnvalue == FTDICommand.CMD_ResultError)
                     {
                         retry++;
                         if (retry >= 3)
                         {
                             //Give up, too many retries
-                            this.GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
+                            GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
                             throw new ETCPGeckoException(ETCPErrorCode.TooManyRetries);
                         }
                         //GeckoWrite(BitConverter.GetBytes(GCRETRY), 1);
@@ -318,7 +320,7 @@ namespace MamiesModGecko
                     else if (returnvalue == FTDICommand.CMD_FatalError)
                     {
                         //Major fail, give it up
-                        this.GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
+                        GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
                         throw new ETCPGeckoException(ETCPErrorCode.FTDIReadDataError);
                     }
                 }
@@ -333,7 +335,7 @@ namespace MamiesModGecko
                 //next chunk
                 chunk++;
 
-                if (!this.CancelDump)
+                if (!CancelDump)
                 {
                     //ackowledge package -- nope, too slow, TCP is reliable!
                     //GeckoWrite(BitConverter.GetBytes(GCACK), 1);
@@ -341,7 +343,7 @@ namespace MamiesModGecko
                 else
                 {
                     // User requested a cancel
-                    this.GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
+                    GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
                     done = true;
                 }
             }
@@ -350,14 +352,14 @@ namespace MamiesModGecko
             while (!done && lastchunk > 0)
             {
                 //No output yet availible
-                this.SendUpdate(startdump + chunk * packetsize, chunk, allchunks, chunk * packetsize, memlength, retry == 0, true);
+                SendUpdate(startdump + chunk * packetsize, chunk, allchunks, chunk * packetsize, memlength, retry == 0, true);
                 //Set buffer
                 // buffer = new Byte[lastchunk];
                 Byte[] response = new Byte[1];
-                if (this.GeckoRead(response, 1) != FTDICommand.CMD_OK)
+                if (GeckoRead(response, 1) != FTDICommand.CMD_OK)
                 {
                     //Major fail, give it up
-                    this.GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
+                    GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
                     throw new ETCPGeckoException(ETCPErrorCode.FTDIReadDataError);
                 }
                 Byte reply = response[0];
@@ -370,14 +372,14 @@ namespace MamiesModGecko
                 }
                 else
                 {
-                    FTDICommand returnvalue = this.GeckoRead(buffer, lastchunk);
+                    FTDICommand returnvalue = GeckoRead(buffer, lastchunk);
                     if (returnvalue == FTDICommand.CMD_ResultError)
                     {
                         retry++;
                         if (retry >= 3)
                         {
                             //Give up, too many retries
-                            this.GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
+                            GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
                             throw new ETCPGeckoException(ETCPErrorCode.TooManyRetries);
                         }
                         //GeckoWrite(BitConverter.GetBytes(GCRETRY), 1);
@@ -386,7 +388,7 @@ namespace MamiesModGecko
                     else if (returnvalue == FTDICommand.CMD_FatalError)
                     {
                         //Major fail, give it up
-                        this.GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
+                        GeckoWrite(BitConverter.GetBytes(GCFAIL), 1);
                         throw new ETCPGeckoException(ETCPErrorCode.FTDIReadDataError);
                     }
                 }
@@ -402,7 +404,7 @@ namespace MamiesModGecko
                 //ackowledge package -- nope, too slow, TCP is reliable!
                 //GeckoWrite(BitConverter.GetBytes(GCACK), 1);
             }
-            this.SendUpdate(enddump, allchunks, allchunks, memlength, memlength, true, true);
+            SendUpdate(enddump, allchunks, allchunks, memlength, memlength, true, true);
         }
         #endregion
 
@@ -416,11 +418,11 @@ namespace MamiesModGecko
             PokeVal = ByteSwap.Swap(PokeVal);
 
             //Send poke
-            if (this.RawCommand(cmd_writekern) != FTDICommand.CMD_OK)
+            if (RawCommand(cmd_writekern) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             //write value
-            if (this.GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
+            if (GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
         }
 
@@ -431,15 +433,15 @@ namespace MamiesModGecko
             address = ByteSwap.Swap(address);
 
             //Send read
-            if (this.RawCommand(cmd_readkern) != FTDICommand.CMD_OK)
+            if (RawCommand(cmd_readkern) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             //write value
-            if (this.GeckoWrite(BitConverter.GetBytes(address), 4) != FTDICommand.CMD_OK)
+            if (GeckoWrite(BitConverter.GetBytes(address), 4) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             Byte[] buffer = new Byte[4];
-            if (this.GeckoRead(buffer, 4) != FTDICommand.CMD_OK)
+            if (GeckoRead(buffer, 4) != FTDICommand.CMD_OK)
                 throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
 
             return ByteSwap.Swap(BitConverter.ToUInt32(buffer, 0));
@@ -459,77 +461,23 @@ namespace MamiesModGecko
             PokeVal = ByteSwap.Swap(PokeVal);
 
             //Send poke
-            if (this.RawCommand(cmd_pokemem) != FTDICommand.CMD_OK)
+            if (RawCommand(cmd_pokemem) != FTDICommand.CMD_OK)
             {
                 //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
-                MessageBox.Show("Your Wii U have crash or you are disconnected to MamiesMod V2 !", "MamiesMod V2");
+                System.Windows.Forms.MessageBox.Show("Your Wii U have crash or you are disconnected !");
             }
 
             //write value
-            if (this.GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
+            if (GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
             {
                 //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
-                //MessageBox.Show("Your Wii U have crash or you are disconnected to MamiesMod V2 !", "MamiesMod V2");
-            }
-                
-        }
-
-        //Poke a long value - note: address and value must be all in endianness of sending platform
-        public void pokeLong(UInt32 address, ulong value)
-        {
-            //Lower address
-            address &= 0xFFFFFFFC;
-
-            //value = send [address in big endian] [value in big endian]
-            UInt64 PokeVal = (((UInt64)address) << 32) | ((UInt64)value);
-
-            PokeVal = ByteSwap.Swap(PokeVal);
-
-            //Send poke
-            if (this.RawCommand(cmd_pokemem) != FTDICommand.CMD_OK)
-            {
-                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
-                MessageBox.Show("Your Wii U have crash or you are disconnected to MamiesMod V2 !", "MamiesMod V2");
-            }
-
-            //write value
-            if (this.GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
-            {
-                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
-                //MessageBox.Show("Your Wii U have crash or you are disconnected to MamiesMod V2 !", "MamiesMod V2");
-            }
-        }
-
-        //Poke a 64 bit value - note: address and value must be all in endianness of sending platform
-        public void poke64(UInt32 address, UInt64 value)
-        {
-            //Lower address
-            address &= 0xFFFFFFFC;
-
-            //value = send [address in big endian] [value in big endian]
-            UInt64 PokeVal = (((UInt64)address) << 32) | ((UInt64)value);
-
-            PokeVal = ByteSwap.Swap(PokeVal);
-
-            //Send poke
-            if (this.RawCommand(cmd_pokemem) != FTDICommand.CMD_OK)
-            {
-                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
-                MessageBox.Show("Your Wii U have crash or you are disconnected to MamiesMod V2 !", "MamiesMod V2");
-            }
-
-            //write value
-            if (this.GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
-            {
-                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
-                //MessageBox.Show("Your Wii U have crash or you are disconnected to MamiesMod V2 !", "MamiesMod V2");
             }
         }
 
         //Copy of poke, just poke32 to make clear it is a 32-bit poke
         public void poke32(UInt32 address, UInt32 value)
         {
-            this.poke(address, value);
+            poke(address, value);
         }
 
         //Poke a 16 bit value - note: address and value must be all in endianness of sending platform
@@ -544,12 +492,17 @@ namespace MamiesModGecko
             PokeVal = ByteSwap.Swap(PokeVal);
 
             //Send poke16
-            if (this.RawCommand(cmd_poke16) != FTDICommand.CMD_OK)
-                throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            if (RawCommand(cmd_poke16) != FTDICommand.CMD_OK)
+            {
+                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+                System.Windows.Forms.MessageBox.Show("Your Wii U have crash or you are disconnected !");
+            }
 
             //write value
-            if (this.GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
-                throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            if (GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
+            {
+                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            }
         }
 
         //Poke a 08 bit value - note: address and value must be all in endianness of sending platform
@@ -561,12 +514,17 @@ namespace MamiesModGecko
             PokeVal = ByteSwap.Swap(PokeVal);
 
             //Send poke08
-            if (this.RawCommand(cmd_poke08) != FTDICommand.CMD_OK)
-                throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            if (RawCommand(cmd_poke08) != FTDICommand.CMD_OK)
+            {
+                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+                System.Windows.Forms.MessageBox.Show("Your Wii U have crash or you are disconnected !");
+            }
 
             //write value
-            if (this.GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
-                throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            if (GeckoWrite(BitConverter.GetBytes(PokeVal), 8) != FTDICommand.CMD_OK)
+            {
+                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            }
         }
         #endregion
 
@@ -585,13 +543,13 @@ namespace MamiesModGecko
             MemoryStream stream = new MemoryStream();
 
             //make sure to not send data to the output
-            GeckoProgress oldUpdate = this.PChunkUpdate;
-            this.PChunkUpdate = null;
+            GeckoProgress oldUpdate = PChunkUpdate;
+            PChunkUpdate = null;
 
             try
             {
                 //dump data
-                this.Dump(paddress, paddress + 4, stream);
+                Dump(paddress, paddress + 4, stream);
 
                 //go to beginning
                 stream.Seek(0, SeekOrigin.Begin);
@@ -608,11 +566,17 @@ namespace MamiesModGecko
             }
             finally
             {
-                this.PChunkUpdate = oldUpdate;
+                PChunkUpdate = oldUpdate;
 
                 //make sure the Stream is properly closed
                 stream.Close();
             }
+        }
+
+        //Shortcut for using peek
+        public UInt32 peek32(UInt32 address)
+        {
+            return peek(address);
         }
 
         public UInt32 peek16(UInt32 address)
@@ -629,13 +593,13 @@ namespace MamiesModGecko
             MemoryStream stream = new MemoryStream();
 
             //make sure to not send data to the output
-            GeckoProgress oldUpdate = this.PChunkUpdate;
-            this.PChunkUpdate = null;
+            GeckoProgress oldUpdate = PChunkUpdate;
+            PChunkUpdate = null;
 
             try
             {
                 //dump data
-                this.Dump(paddress, paddress + 4, stream);
+                Dump(paddress, paddress + 4, stream);
 
                 //go to beginning
                 stream.Seek(0, SeekOrigin.Begin);
@@ -652,174 +616,137 @@ namespace MamiesModGecko
             }
             finally
             {
-                this.PChunkUpdate = oldUpdate;
+                PChunkUpdate = oldUpdate;
 
                 //make sure the Stream is properly closed
                 stream.Close();
             }
         }
         #endregion
+        #endregion
 
         #region Make by nt games
-        #region Mix
-        public uint Mix(uint baseval, decimal val)
+        #region Connection
+        public void simplyConnect()
         {
-            decimal value = 0m + val;
-            return baseval + (uint)value;
-        }
+            try
+            {
+                ptcp.Connect();
+            }
+            catch (IOException)
+            {
+                Disconnect();
+                throw new ETCPGeckoException(ETCPErrorCode.noTCPGeckoFound);
+            }
 
-        public uint Mixmill(uint baseval, decimal val)
-        {
-            decimal value = 1000000m * val;
-            return baseval + (uint)value;
-        }
-        public uint Mixmillmoin(uint baseval, decimal val)
-        {
-            decimal value = 20000m * val;
-            return baseval - (uint)value;
-        }
-
-        public uint Mixmillplus(uint baseval, decimal val)
-        {
-            decimal value = 20000m * val;
-            return baseval + (uint)value;
-        }
-
-        public uint Mixmillplus7(uint baseval, decimal val)
-        {
-            decimal value = 70000m * val;
-            return baseval + (uint)value;
-        }
-
-        public uint Mixmillmoin7(uint baseval, decimal val)
-        {
-            decimal value = 70000m * val;
-            return baseval - (uint)value;
-        }
-
-        public uint Mixmill1moin(uint baseval, decimal val)
-        {
-            decimal value = 500000m * val;
-            return baseval - (uint)value;
-        }
-
-        public uint Mixmill1plus(uint baseval, decimal val)
-        {
-            decimal value = 500000m * val;
-            return baseval + (uint)value;
-        }
-
-        public uint Mixmill_2(uint baseval, decimal val)
-        {
-            decimal value = 10m * val;
-            return baseval + (uint)value;
-        }
-
-        public uint adresseplus4(uint baseval, decimal val)
-        {
-            decimal value = 4 * val;
-            return baseval + (uint)value;
+            Thread.Sleep(150);
+            Connected = true;
         }
         #endregion
 
-        #region Clear string
-        public void ClearString(uint address)
+        #region Poke commands
+        //Poke a 64 bit value - note: address and value must be all in endianness of sending platform
+        public void poke64(UInt32 address, long value)
         {
-            uint clearingAddress = address;
+            //Convert value in long to a string
+            string stringValue = convertToHexString(value, 16);
 
-            while (peek(clearingAddress) != 0x00000000)
-            {
-                poke32(clearingAddress, 0x00000000);
-                clearingAddress += 4;
-            }
+            //Separates the two values
+            uint valueA = Convert.ToUInt32(stringValue.Substring(0, 8), 16);
+            uint valueB = Convert.ToUInt32(stringValue.Substring(8, 8), 16);
+
+            //Poke the two values
+            poke(address, valueA);
+            poke(address + 0x4, valueB);
         }
 
-        public void clearString2(uint startAddress, uint endAddress)
+        //Poke a big (infinite) value - note: address must be all in endianness of sending platform and value must be all in hexadecimal in a string
+        public void pokeHexString(uint address, string input) //or makeAssembly
         {
-            uint nombre = endAddress - startAddress;
-            for (int x = 0; x < nombre;)
+            List<uint> values = new List<uint> { };
+            int totalValuesNumber = input.Length / 8;
+
+            for (int number = 0; number <= totalValuesNumber; number++)
             {
-                poke32(startAddress + Convert.ToUInt32(x), 0x00000000);
-                x = x + 4;
-            }
-        }
-        #endregion
-
-        public void convertToUint(int number)
-        {
-            Convert.ToUInt32(number);
-        }
-
-        public void copyValueToString(uint startAddress, uint endAddress, string text)
-        {
-            uint nombre = endAddress - startAddress;
-            for (int x = 0; x < nombre;)
-            {
-                text = text + String.Format("{0:x8}", peek(startAddress + Convert.ToUInt32(x)));
-                x = x + 4;
-            }
-        }
-
-        public void pokeString(uint address, string text)
-        {
-            int number = 0;
-            uint[] table = new uint[1];
-            uint value = 0u;
-            int charactersNumber = text.Length;
-            uint adressNumber = 0u;
-
-            if (charactersNumber % 2 == 1)
-            {
-                text = text + " ";
-                charactersNumber = charactersNumber + 1;
-            }
-
-            for (number = 0; number < charactersNumber; number++)
-            {
-                value = (value << 16) | text[number];
-                if (((number + 1) % 2) == 0)
+                if (number == totalValuesNumber & input.Substring(number * 8).Length != 8)
                 {
-                    Array.Resize(ref table, table.Length + 1);
-                    table[table.Length - 2] = value;
-                    value = 0u;
+                    while (input.Substring(number * 8).Length != 8)
+                    {
+                        input = input + "0";
+                    }
                 }
+                values.Add((uint)Convert.ToInt32(input.Substring(number * 8, 8), 16));
             }
 
-            Array.Resize(ref table, table.Length - 1);
 
-            for (number = 0; number < table.Length; number++)
+            for (int valueNumber = 0; valueNumber < values.Count; valueNumber++)
             {
-                poke32(address + adressNumber, table[number]);
-                adressNumber = adressNumber + 4u;
+                poke32(address + ((uint)valueNumber * 0x4), values[valueNumber]);
             }
         }
 
-        #region Peek String
+        //Little shortcut for pokeHexString
+        public void makeAssembly(uint address, string input)
+        {
+            pokeHexString(address, input);
+        }
+
+        //Poke a UTF16 string value - note: address must be all in endianness of sending platform and value must be all in a string
+        public void pokeStringUTF16(uint address, string text)
+        {
+            Encoding unicode = Encoding.Unicode;
+            Encoding utf16 = Encoding.BigEndianUnicode;
+
+            byte[] unicodeBytes = unicode.GetBytes(text);
+            byte[] utf16Bytes = Encoding.Convert(unicode, utf16, unicodeBytes);
+
+            for (int valueNumber = 0; valueNumber < text.Length * 2; valueNumber++)
+            {
+                poke08(address + ((uint)valueNumber), utf16Bytes[valueNumber]);
+            }
+        }
+
+        //Poke a UTF8 string value - note: address must be all in endianness of sending platform and value must be all in a string
+        public void pokeStringUTF8(uint address, string text)
+        {
+            Encoding unicode = Encoding.Unicode;
+            Encoding utf8 = Encoding.UTF8;
+
+            byte[] unicodeBytes = unicode.GetBytes(text);
+            byte[] utf8Bytes = Encoding.Convert(unicode, utf8, unicodeBytes);
+
+            for (int valueNumber = 0; valueNumber < text.Length; valueNumber++)
+            {
+                poke08(address + ((uint)valueNumber), utf8Bytes[valueNumber]);
+            }
+
+        }
+        #endregion
+
+        #region Peek commands
+        public string peekHexString(uint startAddress, uint endAddress)
+        {
+            string result = "";
+            for (int x = 0; x < endAddress - startAddress;)
+            {
+                result = result + String.Format("{0:x8}", peek(startAddress + Convert.ToUInt32(x)));
+                x = x + 4;
+            }
+            return result;
+        }
+
         public string peekStringUTF16(UInt32 address)
         {
             char character1 = ' ';
             char character2 = ' ';
             string result = "";
-            uint value = address;
-            string hexString = Convert.ToString(value, 16);
+            uint value = peek(address);
+            string hexString = convertToHexString(value, 8);
 
             if (hexString == "0") //0 characters
             { }
             else if (hexString.Length > 4) //2 characters
             {
-                if (hexString.Length == 5)
-                {
-                    hexString = "000" + hexString;
-                }
-                else if (hexString.Length == 6)
-                {
-                    hexString = "00" + hexString;
-                }
-                else if (hexString.Length == 7)
-                {
-                    hexString = "0" + hexString;
-                }
-
                 character1 = (char)Convert.ToInt32(hexString.Substring(0, 4), 16);
                 character2 = (char)Convert.ToInt32(hexString.Substring(4, 4), 16);
                 result = $"{character1}{character2}";
@@ -840,18 +767,13 @@ namespace MamiesModGecko
             char character3 = ' ';
             char character4 = ' ';
             string result = "";
-            uint value = address;
-            string hexString = Convert.ToString(value, 16);
+            uint value = peek(address);
+            string hexString = convertToHexString(value, 8);
 
             if (hexString == "0") //0 characters
             { }
             else if (hexString.Length == 7 || hexString.Length == 8) //4 characters
             {
-                if (hexString.Length == 7)
-                {
-                    hexString = "0" + hexString;
-                }
-
                 character1 = (char)Convert.ToInt32(hexString.Substring(0, 2), 16);
                 character2 = (char)Convert.ToInt32(hexString.Substring(2, 2), 16);
                 character3 = (char)Convert.ToInt32(hexString.Substring(4, 2), 16);
@@ -860,11 +782,6 @@ namespace MamiesModGecko
             }
             else if (hexString.Length == 5 || hexString.Length == 6) //3 characters
             {
-                if (hexString.Length == 5)
-                {
-                    hexString = "0" + hexString;
-                }
-
                 character1 = (char)Convert.ToInt32(hexString.Substring(0, 2), 16);
                 character2 = (char)Convert.ToInt32(hexString.Substring(2, 2), 16);
                 character3 = (char)Convert.ToInt32(hexString.Substring(4, 2), 16);
@@ -872,11 +789,6 @@ namespace MamiesModGecko
             }
             else if (hexString.Length == 3 || hexString.Length == 4) //2 characters
             {
-                if (hexString.Length == 3)
-                {
-                    hexString = "0" + hexString;
-                }
-
                 character1 = (char)Convert.ToInt32(hexString.Substring(0, 2), 16);
                 character2 = (char)Convert.ToInt32(hexString.Substring(2, 2), 16);
                 result = $"{character1}{character2}";
@@ -889,9 +801,29 @@ namespace MamiesModGecko
 
             return result;
         }
+
+        public string peekIP(uint address)
+        {
+            uint value = peek(address);
+            string hexString = convertToHexString(value, 8);
+
+            if (value == 0)
+            {
+                return "0.0.0.0";
+            }
+            else
+            {
+                string number1 = Convert.ToInt32(hexString.Substring(0, 2), 16).ToString();
+                string number2 = Convert.ToInt32(hexString.Substring(2, 2), 16).ToString();
+                string number3 = Convert.ToInt32(hexString.Substring(4, 2), 16).ToString();
+                string number4 = Convert.ToInt32(hexString.Substring(6, 2), 16).ToString();
+
+                return number1 + "." + number2 + "." + number3 + "." + number4;
+            }
+        }
         #endregion
 
-        #region Code Handler
+        #region Code Handler commands
         //or JGecko U Code
         public void addCodeToCodesList(List<uint> codesList, string codeText)
         {
@@ -915,25 +847,94 @@ namespace MamiesModGecko
         public void disableCodes()
         {
             poke32(0x10014CFC, 0x00000000);
-            clearString2(0x01133000, 0x01134300);//à améliorer
+            clearMemory(0x01133000, 0x01134300); //à améliorer
         }
         #endregion
 
-        public void simplyConnect()
+        #region Call function commands
+        public UInt64 CallFunction64(uint address, params uint[] args)
         {
-            try
+            byte[] buffer = new Byte[4 + 8 * 4];//36
+
+            address = ByteSwap.Swap(address);//prend l'adresse
+
+            BitConverter.GetBytes(address).CopyTo(buffer, 0);
+
+            for (int i = 0; i < 8; i++)
             {
-                this.ptcp.Connect();
-            }
-            catch (IOException)
-            {
-                this.Disconnect();
-                throw new ETCPGeckoException(ETCPErrorCode.noTCPGeckoFound);
+                if (i < args.Length)
+                {
+                    BitConverter.GetBytes(ByteSwap.Swap(args[i])).CopyTo(buffer, 4 + i * 4);
+                }
+                else
+                {
+                    BitConverter.GetBytes(0xfecad0ba).CopyTo(buffer, 4 + i * 4);
+                }
             }
 
-            System.Threading.Thread.Sleep(150);
-            this.Connected = true;
+            if (RawCommand(cmd_rpc) != FTDICommand.CMD_OK)
+            {
+                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+                System.Windows.Forms.MessageBox.Show("Your Wii U have crash or you are disconnected !");
+            }
+
+            if (GeckoWrite(buffer, buffer.Length) != FTDICommand.CMD_OK)
+            {
+                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            }
+
+            if (GeckoRead(buffer, 8) != FTDICommand.CMD_OK)
+            {
+                //throw new ETCPGeckoException(ETCPErrorCode.FTDICommandSendError);
+            }
+
+            return ByteSwap.Swap(BitConverter.ToUInt64(buffer, 0));
         }
+
+        public uint CallFunction(uint address, params uint[] args)
+        {
+            return (uint)(CallFunction64(address, args) >> 32);
+        }
+        #endregion
+
+        #region Others commands
+        #region Change value
+        public uint changeValue(uint baseValue, decimal value) //or Mix
+        {
+            return baseValue + (uint)value;
+        }
+
+        public uint customChangeValue(uint baseValue, decimal value, decimal increment)
+        {
+            return baseValue + (uint)(increment * value);
+        }
+        #endregion
+
+        #region Clear memory
+        public void clearMemory(uint startAddress, uint endAddress) 
+        {
+            for (int x = 0; x < endAddress - startAddress;)
+            {
+                poke32(startAddress + Convert.ToUInt32(x), 0x00000000);
+                x = x + 4;
+            }
+        }
+        #endregion
+        #endregion
+
+        #region Conversion
+        public string convertToHexString(long value, int maxLength)
+        {
+            string result = Convert.ToString(value, 16);
+
+            while (result.Length != maxLength)
+            {
+                result = "0" + result;
+            }
+
+            return result;
+        }
+        #endregion
     }
 
     public class BeforeConnect

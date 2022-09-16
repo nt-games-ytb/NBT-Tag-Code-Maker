@@ -22,10 +22,10 @@
 
         private AddressRange(AddressType desc, byte id, uint low, uint high)
         {
-            this.Id = id;
-            this.Description = desc;
-            this.Low = low;
-            this.High = high;
+            Id = id;
+            Description = desc;
+            Low = low;
+            High = high;
         }
 
         public AddressRange(AddressType desc, uint low, uint high)

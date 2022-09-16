@@ -107,6 +107,15 @@
             this.saveCode = new System.Windows.Forms.Button();
             this.saveTag = new System.Windows.Forms.Button();
             this.loadTag = new System.Windows.Forms.Button();
+            this.signBox = new System.Windows.Forms.GroupBox();
+            this.signText4 = new System.Windows.Forms.TextBox();
+            this.signText3 = new System.Windows.Forms.TextBox();
+            this.signText2 = new System.Windows.Forms.TextBox();
+            this.signText1 = new System.Windows.Forms.TextBox();
+            this.verified = new System.Windows.Forms.CheckBox();
+            this.censored = new System.Windows.Forms.CheckBox();
+            this.createdByRestrictedPlayer = new System.Windows.Forms.CheckBox();
+            this.createdByHost = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.itemPlace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemDamage)).BeginInit();
@@ -125,6 +134,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.green)).BeginInit();
             this.codeBox.SuspendLayout();
             this.connectionBox.SuspendLayout();
+            this.signBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // creativeTab
@@ -261,7 +271,7 @@
             this.itemDamage.Enabled = false;
             this.itemDamage.Location = new System.Drawing.Point(101, 102);
             this.itemDamage.Maximum = new decimal(new int[] {
-            2267,
+            32767,
             0,
             0,
             0});
@@ -1092,7 +1102,7 @@
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(73, 16);
             this.label18.TabIndex = 26;
-            this.label18.Text = "Version 2.2";
+            this.label18.Text = "Version 2.3";
             // 
             // label19
             // 
@@ -1234,11 +1244,102 @@
             this.loadTag.UseVisualStyleBackColor = true;
             this.loadTag.Click += new System.EventHandler(this.loadTag_Click);
             // 
+            // signBox
+            // 
+            this.signBox.Controls.Add(this.signText4);
+            this.signBox.Controls.Add(this.signText3);
+            this.signBox.Controls.Add(this.signText2);
+            this.signBox.Controls.Add(this.signText1);
+            this.signBox.Controls.Add(this.verified);
+            this.signBox.Controls.Add(this.censored);
+            this.signBox.Controls.Add(this.createdByRestrictedPlayer);
+            this.signBox.Controls.Add(this.createdByHost);
+            this.signBox.ForeColor = System.Drawing.Color.White;
+            this.signBox.Location = new System.Drawing.Point(807, 20);
+            this.signBox.Name = "signBox";
+            this.signBox.Size = new System.Drawing.Size(112, 243);
+            this.signBox.TabIndex = 35;
+            this.signBox.TabStop = false;
+            this.signBox.Text = "Sign";
+            // 
+            // signText4
+            // 
+            this.signText4.Location = new System.Drawing.Point(6, 209);
+            this.signText4.MaxLength = 15;
+            this.signText4.Name = "signText4";
+            this.signText4.Size = new System.Drawing.Size(100, 22);
+            this.signText4.TabIndex = 7;
+            // 
+            // signText3
+            // 
+            this.signText3.Location = new System.Drawing.Point(6, 179);
+            this.signText3.MaxLength = 15;
+            this.signText3.Name = "signText3";
+            this.signText3.Size = new System.Drawing.Size(100, 22);
+            this.signText3.TabIndex = 6;
+            // 
+            // signText2
+            // 
+            this.signText2.Location = new System.Drawing.Point(6, 151);
+            this.signText2.MaxLength = 15;
+            this.signText2.Name = "signText2";
+            this.signText2.Size = new System.Drawing.Size(100, 22);
+            this.signText2.TabIndex = 5;
+            // 
+            // signText1
+            // 
+            this.signText1.Location = new System.Drawing.Point(6, 121);
+            this.signText1.MaxLength = 15;
+            this.signText1.Name = "signText1";
+            this.signText1.Size = new System.Drawing.Size(100, 22);
+            this.signText1.TabIndex = 4;
+            // 
+            // verified
+            // 
+            this.verified.AutoSize = true;
+            this.verified.Location = new System.Drawing.Point(6, 95);
+            this.verified.Name = "verified";
+            this.verified.Size = new System.Drawing.Size(72, 20);
+            this.verified.TabIndex = 3;
+            this.verified.Text = "Verified";
+            this.verified.UseVisualStyleBackColor = true;
+            // 
+            // censored
+            // 
+            this.censored.AutoSize = true;
+            this.censored.Location = new System.Drawing.Point(6, 69);
+            this.censored.Name = "censored";
+            this.censored.Size = new System.Drawing.Size(85, 20);
+            this.censored.TabIndex = 2;
+            this.censored.Text = "Censored";
+            this.censored.UseVisualStyleBackColor = true;
+            // 
+            // createdByRestrictedPlayer
+            // 
+            this.createdByRestrictedPlayer.AutoSize = true;
+            this.createdByRestrictedPlayer.Location = new System.Drawing.Point(6, 43);
+            this.createdByRestrictedPlayer.Name = "createdByRestrictedPlayer";
+            this.createdByRestrictedPlayer.Size = new System.Drawing.Size(191, 20);
+            this.createdByRestrictedPlayer.TabIndex = 1;
+            this.createdByRestrictedPlayer.Text = "Created by restricted player";
+            this.createdByRestrictedPlayer.UseVisualStyleBackColor = true;
+            // 
+            // createdByHost
+            // 
+            this.createdByHost.AutoSize = true;
+            this.createdByHost.Location = new System.Drawing.Point(6, 17);
+            this.createdByHost.Name = "createdByHost";
+            this.createdByHost.Size = new System.Drawing.Size(120, 20);
+            this.createdByHost.TabIndex = 0;
+            this.createdByHost.Text = "Created by host";
+            this.createdByHost.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 650);
+            this.ClientSize = new System.Drawing.Size(994, 650);
+            this.Controls.Add(this.signBox);
             this.Controls.Add(this.loadTag);
             this.Controls.Add(this.saveTag);
             this.Controls.Add(this.saveCode);
@@ -1292,6 +1393,8 @@
             this.codeBox.PerformLayout();
             this.connectionBox.ResumeLayout(false);
             this.connectionBox.PerformLayout();
+            this.signBox.ResumeLayout(false);
+            this.signBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1377,6 +1480,15 @@
         private System.Windows.Forms.Button saveCode;
         private System.Windows.Forms.Button saveTag;
         private System.Windows.Forms.Button loadTag;
+        private System.Windows.Forms.GroupBox signBox;
+        private System.Windows.Forms.CheckBox createdByRestrictedPlayer;
+        private System.Windows.Forms.CheckBox createdByHost;
+        private System.Windows.Forms.TextBox signText4;
+        private System.Windows.Forms.TextBox signText3;
+        private System.Windows.Forms.TextBox signText2;
+        private System.Windows.Forms.TextBox signText1;
+        private System.Windows.Forms.CheckBox verified;
+        private System.Windows.Forms.CheckBox censored;
     }
 }
 

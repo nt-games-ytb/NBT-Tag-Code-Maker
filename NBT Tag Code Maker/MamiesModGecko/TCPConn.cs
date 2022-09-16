@@ -14,10 +14,10 @@ namespace MamiesModGecko
 
         public TCPConn(string host, int port)
         {
-            this.Host = host;
-            this.Port = port;
-            this.client = null;
-            this.stream = null;
+            Host = host;
+            Port = port;
+            client = null;
+            stream = null;
         }
 
         private string Host { get; set; }
@@ -28,51 +28,51 @@ namespace MamiesModGecko
         {
             try
             {
-                this.Close();
+                Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
 
-            this.client = new TcpClient { NoDelay = true };
-            var ar = this.client.BeginConnect(this.Host, this.Port, null, null);
+            client = new TcpClient { NoDelay = true };
+            var ar = client.BeginConnect(Host, Port, null, null);
             var wh = ar.AsyncWaitHandle;
             try
             {
                 if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5), false))
                 {
-                    this.client.Close();
+                    client.Close();
                     throw new IOException("Connection timeout.", new TimeoutException());
                 }
 
-                this.client.EndConnect(ar);
+                client.EndConnect(ar);
             }
             finally
             {
                 wh.Close();
             }
 
-            this.stream = this.client.GetStream();
-            this.stream.ReadTimeout = 10000;
-            this.stream.WriteTimeout = 10000;
+            stream = client.GetStream();
+            stream.ReadTimeout = 10000;
+            stream.WriteTimeout = 10000;
         }
 
         public void Close()
         {
             try
             {
-                if (this.client == null)
+                if (client == null)
                 {
                     return;
                     throw new IOException("Not connected.", new NullReferenceException());
                 }
 
-                this.client.Close();
+                client.Close();
             }
             finally
             {
-                this.client = null;
+                client = null;
             }
         }
 
@@ -81,7 +81,7 @@ namespace MamiesModGecko
             try
             {
                 var offset = 0;
-                if (this.stream == null)
+                if (stream == null)
                 {
                     throw new IOException("Not connected.", new NullReferenceException());
                 }
@@ -89,7 +89,7 @@ namespace MamiesModGecko
                 bytesRead = 0;
                 while (nobytes > 0)
                 {
-                    var read = this.stream.Read(buffer, offset, (int)nobytes);
+                    var read = stream.Read(buffer, offset, (int)nobytes);
                     if (read >= 0)
                     {
                         bytesRead += (uint)read;
@@ -114,14 +114,14 @@ namespace MamiesModGecko
             try
             {
                 int num = 0;
-                if (this.stream == null)
+                if (stream == null)
                 {
                     throw new IOException("The NetworkStream was null", new NullReferenceException());
                 }
                 bytesRead = 0u;
                 while (nobytes > 0L)
                 {
-                    int num2 = this.stream.Read(buffer, num, (int)nobytes);
+                    int num2 = stream.Read(buffer, num, (int)nobytes);
                     if (num2 < 0)
                     {
                         break;
@@ -141,12 +141,12 @@ namespace MamiesModGecko
         {
             try
             {
-                if (this.stream == null)
+                if (stream == null)
                 {
                     throw new IOException("Not connected.", new NullReferenceException());
                 }
 
-                this.stream.Write(buffer, 0, nobytes);
+                stream.Write(buffer, 0, nobytes);
                 if (nobytes >= 0)
                 {
                     bytesWritten = (uint)nobytes;
@@ -156,7 +156,7 @@ namespace MamiesModGecko
                     bytesWritten = 0;
                 }
 
-                this.stream.Flush();
+                stream.Flush();
             }
             catch (ObjectDisposedException e)
             {
